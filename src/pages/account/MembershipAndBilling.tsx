@@ -1,11 +1,10 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
-import { Box, Stack, Table, Title } from '@mantine/core';
+import { Box, Stack, Table, Text, Title } from '@mantine/core';
 import { formatCoding, getReferenceString } from '@medplum/core';
 import type { Coverage, Patient } from '@medplum/fhirtypes';
 import { useMedplum } from '@medplum/react';
 import type { JSX } from 'react';
-import { InfoButton } from '../../components/InfoButton';
 import { InfoSection } from '../../components/InfoSection';
 
 function CoverageTable({ coverages }: { coverages: Coverage[] }): JSX.Element {
@@ -13,9 +12,9 @@ function CoverageTable({ coverages }: { coverages: Coverage[] }): JSX.Element {
     <Table>
       <Table.Thead>
         <Table.Tr>
-          <Table.Th>Payor Name</Table.Th>
-          <Table.Th>Subscriber ID</Table.Th>
-          <Table.Th>Relationship to Subscriber</Table.Th>
+          <Table.Th>Cobertura</Table.Th>
+          <Table.Th>N° de afiliado</Table.Th>
+          <Table.Th>Relación con el titular</Table.Th>
         </Table.Tr>
       </Table.Thead>
       <Table.Tbody>
@@ -39,30 +38,30 @@ export function MembershipAndBilling(): JSX.Element {
       beneficiary: getReferenceString(patient),
     })
     .read();
-  const payments = medplum.searchResources('PaymentNotice').read();
 
   return (
     <Box p="xl">
-      <Title mb="xl">Membership & Billing</Title>
-      <InfoSection title="Coverage">
+      <Title mb="xl">Membresía y Facturación</Title>
+      <InfoSection title="Cobertura">
         {coverages.length === 0 ? (
-          <Box p="xl">No coverage</Box>
+          <Box p="xl">Sin cobertura</Box>
         ) : (
           <Stack gap={0}>
             <CoverageTable coverages={coverages} />
           </Stack>
         )}
       </InfoSection>
-      <InfoSection title="Payments">
-        {payments.length === 0 ? (
-          <Box p="xl">No payments</Box>
-        ) : (
-          <Stack gap={0}>
-            {payments.map((p) => (
-              <InfoButton key={p.id}>{p.id}</InfoButton>
-            ))}
-          </Stack>
-        )}
+      <InfoSection title="Pagos">
+        {/*
+          F4 (pendiente): mostrar los pagos del paciente desde el modelo de facturación
+          de BioWellness (Account / Invoice / ChargeItem). Antes se listaban TODOS los
+          PaymentNotice del proyecto sin filtrar por paciente (fuga de datos) y, además,
+          PaymentNotice no tiene search param de paciente en FHIR R4, por lo que se quitó
+          la consulta global. Cablear a la consulta por paciente al definir el modelo.
+        */}
+        <Box p="xl">
+          <Text c="dimmed">El detalle de pagos estará disponible próximamente.</Text>
+        </Box>
       </InfoSection>
     </Box>
   );

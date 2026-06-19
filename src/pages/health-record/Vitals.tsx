@@ -9,7 +9,11 @@ import type { JSX } from 'react';
 export function Vitals(): JSX.Element {
   const medplum = useMedplum();
   const patient = medplum.getProfile() as Patient;
-  const observations = medplum.searchResources('Observation', 'patient=' + getReferenceString(patient)).read();
+  // Solo signos vitales: filtra por category=vital-signs para no mezclar los
+  // biomarcadores (que se guardan con category=panel-biomarcador).
+  const observations = medplum
+    .searchResources('Observation', `patient=${getReferenceString(patient)}&category=vital-signs&_count=100`)
+    .read();
 
   return (
     <Document>

@@ -48,6 +48,17 @@ export function Measurement(): JSX.Element | null {
     const obs: Observation = {
       resourceType: 'Observation',
       status: 'preliminary',
+      category: [
+        {
+          coding: [
+            {
+              system: 'http://terminology.hl7.org/CodeSystem/observation-category',
+              code: 'vital-signs',
+              display: 'Vital Signs',
+            },
+          ],
+        },
+      ],
       subject: createReference(patient),
       effectiveDateTime: new Date().toISOString(),
       code: {
