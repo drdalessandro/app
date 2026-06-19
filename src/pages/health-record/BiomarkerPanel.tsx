@@ -17,7 +17,7 @@ import {
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { createReference, formatDate, getReferenceString } from '@medplum/core';
-import type { Observation, Patient } from '@medplum/fhirtypes';
+import type { Observation, ObservationReferenceRange, Patient, Quantity } from '@medplum/fhirtypes';
 import { Document, useMedplum } from '@medplum/react';
 import { IconInfoCircle, IconPlus } from '@tabler/icons-react';
 import type { ChartData } from 'chart.js';
@@ -28,6 +28,8 @@ import { LineChart } from '../../components/LineChart';
 import { showErrorNotification } from '../../utils/notifications';
 import type { Biomarker, BiomarkerRange, PatientSex } from './Biomarkers.data';
 import { biomarkerPanels, isSexSpecific, resolveBiomarkerRanges } from './Biomarkers.data';
+import type { ServerBiomarkerRanges } from '../../fhir/biomarkers';
+import { fetchBiomarkerRanges, PANEL_SYSTEM, resolveServerRanges, TIPO_RANGO_SYSTEM } from '../../fhir/biomarkers';
 
 const chartColors = {
   backgroundColor: 'rgba(29, 112, 214, 0.7)',
@@ -78,6 +80,7 @@ export function BiomarkerPanel(): JSX.Element {
   const panel = panelId ? biomarkerPanels[panelId] : undefined;
 
   const [observations, setObservations] = useState<Observation[]>([]);
+  const [serverRanges, setServerRanges] = useState<Record<string, ServerBiomarkerRanges>>({});
   const [activeBiomarker, setActiveBiomarker] = useState<Biomarker | null>(null);
   const [value, setValue] = useState<number | string>('');
   const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
@@ -98,6 +101,12 @@ export function BiomarkerPanel(): JSX.Element {
     loadData();
   }, [loadData]);
 
+  // Rangos canónicos (convencional/funcional, por sexo) desde las ObservationDefinition del
+  // servidor; si no están cargadas o no hay acceso, se cae a la tabla local (Biomarkers.data.ts).
+  useEffect(() => {
+    fetchBiomarkerRanges(medplum).then(setServerRanges).catch(showErrorNotification);
+  }, [medplum]);
+
   if (!panel) {
     return <Navigate replace to="/health-record/biomarkers/endocrinologia" />;
   }
@@ -114,24 +123,32 @@ export function BiomarkerPanel(): JSX.Element {
 
   function submitObservation(): void {
     const bm = activeBiomarker;
-    if (!bm || value === '' || Number.isNaN(Number(value))) {
+    if (!bm || !panel || value === '' || Number.isNaN(Number(value))) {
       return;
     }
+
+    // Rangos a persistir: los del servidor (ObservationDefinition) si están, si no la tabla local.
+    const sr = serverRanges[bm.code];
+    const { conventional, functional } = sr ? resolveServerRanges(sr, sex) : resolveBiomarkerRanges(bm, sex);
+    const qty = (v: number): Quantity => ({ value: v, unit: bm.unit, system: 'http://unitsofmeasure.org', code: bm.unit });
+    const referenceRange: ObservationReferenceRange[] = [];
+    const pushRange = (range: BiomarkerRange | undefined, tipo: 'convencional' | 'funcional'): void => {
+      if (!range || (range.low === undefined && range.high === undefined)) {
+        return;
+      }
+      referenceRange.push({
+        ...(range.low !== undefined ? { low: qty(range.low) } : {}),
+        ...(range.high !== undefined ? { high: qty(range.high) } : {}),
+        type: { coding: [{ system: TIPO_RANGO_SYSTEM, code: tipo }] },
+      });
+    };
+    pushRange(conventional, 'convencional');
+    pushRange(functional, 'funcional');
 
     const obs: Observation = {
       resourceType: 'Observation',
       status: 'preliminary',
-      category: [
-        {
-          coding: [
-            {
-              system: 'http://terminology.hl7.org/CodeSystem/observation-category',
-              code: 'laboratory',
-              display: 'Laboratory',
-            },
-          ],
-        },
-      ],
+      category: [{ coding: [{ system: PANEL_SYSTEM, code: panel.id, display: panel.title }] }],
       subject: createReference(patient),
       effectiveDateTime: date,
       code: {
@@ -144,15 +161,7 @@ export function BiomarkerPanel(): JSX.Element {
         system: 'http://unitsofmeasure.org',
         code: bm.unit,
       },
-      referenceRange: bm.conventional
-        ? [
-            {
-              low: bm.conventional.low !== undefined ? { value: bm.conventional.low, unit: bm.unit } : undefined,
-              high: bm.conventional.high !== undefined ? { value: bm.conventional.high, unit: bm.unit } : undefined,
-              text: 'Rango convencional',
-            },
-          ]
-        : undefined,
+      ...(referenceRange.length ? { referenceRange } : {}),
     };
 
     medplum
@@ -176,7 +185,8 @@ export function BiomarkerPanel(): JSX.Element {
 
       <Accordion variant="separated" multiple>
         {panel.biomarkers.map((bm) => {
-          const { conventional, functional } = resolveBiomarkerRanges(bm, sex);
+          const sr = serverRanges[bm.code];
+          const { conventional, functional } = sr ? resolveServerRanges(sr, sex) : resolveBiomarkerRanges(bm, sex);
           const sexAware = isSexSpecific(bm);
           const noRangeForSex = sexAware && conventional === undefined && functional === undefined;
           const history = observationsFor(bm.code);
