@@ -12,10 +12,10 @@ import classes from './Header.module.css';
 import { Logo } from './Logo';
 
 const navigation = [
-  { name: 'Health Record', href: '/health-record' },
-  { name: 'Messages', href: '/Communication' },
-  { name: 'Care Plan', href: '/care-plan' },
-  { name: 'Get Care', href: '/get-care' },
+  { name: 'Historia Clínica', href: '/health-record' },
+  { name: 'Mensajes', href: '/Communication' },
+  { name: 'Plan de Cuidado', href: '/care-plan' },
+  { name: 'Solicitar Atención', href: '/get-care' },
 ];
 
 export function Header(): JSX.Element {
@@ -60,19 +60,19 @@ export function Header(): JSX.Element {
                 leftSection={<IconUserCircle size={16} color={theme.colors.red[6]} stroke={1.5} />}
                 onClick={() => navigate('/account/profile')?.catch(console.error)}
               >
-                Your profile
+                Mi perfil
               </Menu.Item>
               <Menu.Item
                 leftSection={<IconSettings size={16} color={theme.colors.blue[6]} stroke={1.5} />}
                 onClick={() => navigate('/account/profile')?.catch(console.error)}
               >
-                Settings
+                Configuración
               </Menu.Item>
               <Menu.Item
                 leftSection={<IconLogout size={16} color={theme.colors.gray[6]} stroke={1.5} />}
                 onClick={() => navigate('/signout')?.catch(console.error)}
               >
-                Sign out
+                Cerrar sesión
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>

@@ -21,18 +21,18 @@ export function Vaccines(): JSX.Element {
 
   return (
     <Box p="xl">
-      <Title mb="lg">Vaccines</Title>
-      <InfoSection title="Active upcoming vaccines">
+      <Title mb="lg">Vacunas</Title>
+      <InfoSection title="Próximas vacunas">
         {activeVaccines.length === 0 ? (
           <Box p="xl" style={{ textAlign: 'center' }}>
             <Stack align="center" w={500} m="auto">
               <img src={PillsImage} width={160} height={160} />
               <Title order={2} fw={900}>
-                No upcoming vaccines available
+                No hay próximas vacunas
               </Title>
               <Text c="gray">
-                If you think you&apos;re missing upcoming vaccines that should be here, please{' '}
-                <Anchor href="#">contact our medical team</Anchor>.
+                Si creés que falta alguna vacuna que debería aparecer aquí, por favor{' '}
+                <Anchor href="#">contactá a nuestro equipo médico</Anchor>.
               </Text>
             </Stack>
           </Box>
@@ -41,7 +41,7 @@ export function Vaccines(): JSX.Element {
         )}
       </InfoSection>
       {pastVaccines.length > 0 && (
-        <InfoSection title="Past vaccines">
+        <InfoSection title="Vacunas anteriores">
           <VaccineList vaccines={pastVaccines} />
         </InfoSection>
       )}

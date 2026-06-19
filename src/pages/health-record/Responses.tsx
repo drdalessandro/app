@@ -21,8 +21,8 @@ export function Responses(): JSX.Element {
 
   return (
     <Box p="xl">
-      <Title mb="lg">Questionnaire Responses</Title>
-      <InfoSection title="Questionnaire Responses">
+      <Title mb="lg">Cuestionarios</Title>
+      <InfoSection title="Cuestionarios">
         <Stack gap={0}>
           {responses.map((resp) => (
             <InfoButton key={resp.id} onClick={() => navigate(`./${resp.id}`)?.catch(console.error)}>

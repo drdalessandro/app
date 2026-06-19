@@ -11,6 +11,8 @@ import { ActionItem } from './pages/care-plan/ActionItem';
 import { ActionItems } from './pages/care-plan/ActionItems';
 import { GetCare } from './pages/GetCarePage';
 import { HealthRecord } from './pages/health-record';
+import { BiomarkerPanel } from './pages/health-record/BiomarkerPanel';
+import { InformedConsent } from './pages/health-record/InformedConsent';
 import { LabResult } from './pages/health-record/LabResult';
 import { LabResults } from './pages/health-record/LabResults';
 import { Measurement } from './pages/health-record/Measurement';
@@ -43,6 +45,9 @@ export function Router(): JSX.Element {
         <Route index element={<Navigate replace to="/health-record/lab-results" />} />
         <Route path="lab-results" element={<LabResults />} />
         <Route path="lab-results/:resultId" element={<LabResult />} />
+        <Route path="biomarkers" element={<Navigate replace to="/health-record/biomarkers/endocrinologia" />} />
+        <Route path="biomarkers/:panelId" element={<BiomarkerPanel />} />
+        <Route path="consent" element={<InformedConsent />} />
         <Route path="medications" element={<Medications />} />
         <Route path="medications/:medicationId" element={<Medication />} />
         <Route path="questionnaire-responses" element={<Responses />} />

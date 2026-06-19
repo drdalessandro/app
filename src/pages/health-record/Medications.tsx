@@ -19,8 +19,8 @@ export function Medications(): JSX.Element {
 
   return (
     <Box p="xl">
-      <Title mb="lg">Medications</Title>
-      <InfoSection title="Medications">
+      <Title mb="lg">Medicación</Title>
+      <InfoSection title="Medicación">
         <Stack gap={0}>
           {medications.map((med) => (
             <InfoButton key={med.id} onClick={() => navigate(`./${med.id}`)?.catch(console.error)}>

@@ -100,11 +100,11 @@ export function Measurement(): JSX.Element | null {
     <Document>
       <Group justify="space-between" mb="xl">
         <Title order={1}>{title}</Title>
-        <Button onClick={() => setModalOpen(true)}>Add Measurement</Button>
+        <Button onClick={() => setModalOpen(true)}>Cargar medición</Button>
       </Group>
       {chartData && <LineChart chartData={chartData} />}
       <Box my="xl">
-        <Alert icon={<IconAlertCircle size={16} />} title="What is this measurement?" color="gray" radius="md">
+        <Alert icon={<IconAlertCircle size={16} />} title="¿Qué es esta medición?" color="gray" radius="md">
           {description}
         </Alert>
       </Box>
@@ -112,8 +112,8 @@ export function Measurement(): JSX.Element | null {
         <Table>
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>Date</Table.Th>
-              <Table.Th>Your Value</Table.Th>
+              <Table.Th>Fecha</Table.Th>
+              <Table.Th>Tu valor</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
@@ -135,7 +135,7 @@ export function Measurement(): JSX.Element | null {
               ))}
             </Group>
             <Group justify="flex-end">
-              <Button type="submit">Add</Button>
+              <Button type="submit">Guardar</Button>
             </Group>
           </Stack>
         </Form>

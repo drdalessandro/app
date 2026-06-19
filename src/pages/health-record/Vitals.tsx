@@ -13,13 +13,13 @@ export function Vitals(): JSX.Element {
 
   return (
     <Document>
-      <Title>Vitals</Title>
+      <Title>Signos Vitales</Title>
       <Table>
         <Table.Thead>
           <Table.Tr>
-            <Table.Th>Measurement</Table.Th>
-            <Table.Th>Your Value</Table.Th>
-            <Table.Th>Last Updated</Table.Th>
+            <Table.Th>Medición</Table.Th>
+            <Table.Th>Tu valor</Table.Th>
+            <Table.Th>Última actualización</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>

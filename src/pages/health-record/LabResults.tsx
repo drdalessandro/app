@@ -19,8 +19,8 @@ export function LabResults(): JSX.Element {
 
   return (
     <Box p="xl">
-      <Title mb="lg">Lab Results</Title>
-      <InfoSection title="Lab Results">
+      <Title mb="lg">Resultados de Laboratorio</Title>
+      <InfoSection title="Resultados de Laboratorio">
         <Stack gap={0}>
           {reports.map((report) => (
             <InfoButton key={report.id} onClick={() => navigate(`./${report.id}`)?.catch(console.error)}>
