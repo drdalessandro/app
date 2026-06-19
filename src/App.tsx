@@ -32,7 +32,7 @@ export function App(): JSX.Element | null {
   }
 
   return (
-    <AppShell header={{ height: 80 }}>
+    <AppShell header={{ height: 60 }}>
       <Header />
       <AppShell.Main>
         <ErrorBoundary>

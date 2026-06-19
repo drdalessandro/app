@@ -17,10 +17,10 @@ const sideMenu = {
 
 export function AccountPage(): JSX.Element {
   return (
-    <Container>
-      <Group align="top">
+    <Container size="lg">
+      <Group align="flex-start" gap="xl" wrap="wrap">
         <SideMenu {...sideMenu} />
-        <div style={{ width: 800, flex: 800 }}>
+        <div style={{ flex: 1, minWidth: 0, maxWidth: 820 }}>
           <Suspense fallback={<div>Cargando...</div>}>
             <Outlet />
           </Suspense>

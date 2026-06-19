@@ -1,7 +1,13 @@
 .container {
-  flex: 200;
+  flex: 0 0 200px;
   width: 200px;
   padding-top: 32px;
+
+  @mixin smaller-than $mantine-breakpoint-sm {
+    flex-basis: 100%;
+    width: 100%;
+    padding-top: 16px;
+  }
 }
 
 .title {
