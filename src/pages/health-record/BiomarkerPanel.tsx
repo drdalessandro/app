@@ -134,7 +134,7 @@ export function BiomarkerPanel(): JSX.Element {
       subject: createReference(patient),
       effectiveDateTime: date,
       code: {
-        coding: [{ system: 'http://loinc.org', code: bm.code, display: bm.title }],
+        coding: [{ system: bm.system ?? 'http://loinc.org', code: bm.code, display: bm.title }],
         text: bm.title,
       },
       valueQuantity: {
