@@ -21,15 +21,15 @@ import type { Observation, ObservationReferenceRange, Patient, Quantity } from '
 import { Document, useMedplum } from '@medplum/react';
 import { IconInfoCircle, IconPlus } from '@tabler/icons-react';
 import type { ChartData } from 'chart.js';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 import { Navigate, useParams } from 'react-router';
 import { LineChart } from '../../components/LineChart';
 import { showErrorNotification } from '../../utils/notifications';
 import type { Biomarker, BiomarkerRange, PatientSex } from './Biomarkers.data';
 import { biomarkerPanels, isSexSpecific, resolveBiomarkerRanges } from './Biomarkers.data';
-import type { ServerBiomarkerRanges } from '../../fhir/biomarkers';
-import { fetchBiomarkerRanges, PANEL_SYSTEM, resolveServerRanges, TIPO_RANGO_SYSTEM } from '../../fhir/biomarkers';
+import type { ServerBiomarker } from '../../fhir/biomarkers';
+import { fetchServerBiomarkers, PANEL_SYSTEM, serverBiomarkerToBiomarker, TIPO_RANGO_SYSTEM } from '../../fhir/biomarkers';
 
 const chartColors = {
   backgroundColor: 'rgba(29, 112, 214, 0.7)',
@@ -80,12 +80,19 @@ export function BiomarkerPanel(): JSX.Element {
   const panel = panelId ? biomarkerPanels[panelId] : undefined;
 
   const [observations, setObservations] = useState<Observation[]>([]);
-  const [serverRanges, setServerRanges] = useState<Record<string, ServerBiomarkerRanges>>({});
+  const [serverBiomarkers, setServerBiomarkers] = useState<ServerBiomarker[]>([]);
   const [activeBiomarker, setActiveBiomarker] = useState<Biomarker | null>(null);
   const [value, setValue] = useState<number | string>('');
   const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
 
-  const codes = panel?.biomarkers.map((b) => b.code).join(',');
+  // Lista de biomarcadores del panel: del servidor (ObservationDefinition) si está disponible,
+  // si no se cae al catálogo local (Biomarkers.data.ts).
+  const items: Biomarker[] = useMemo(() => {
+    const fromServer = serverBiomarkers.filter((b) => b.panel === panelId).map(serverBiomarkerToBiomarker);
+    return fromServer.length > 0 ? fromServer : (panel?.biomarkers ?? []);
+  }, [serverBiomarkers, panelId, panel]);
+
+  const codes = items.map((b) => b.code).join(',');
 
   const loadData = useCallback(() => {
     if (!codes) {
@@ -101,10 +108,9 @@ export function BiomarkerPanel(): JSX.Element {
     loadData();
   }, [loadData]);
 
-  // Rangos canónicos (convencional/funcional, por sexo) desde las ObservationDefinition del
-  // servidor; si no están cargadas o no hay acceso, se cae a la tabla local (Biomarkers.data.ts).
+  // Catálogo de biomarcadores publicado por el servidor (incluye rangos por sexo).
   useEffect(() => {
-    fetchBiomarkerRanges(medplum).then(setServerRanges).catch(showErrorNotification);
+    fetchServerBiomarkers(medplum).then(setServerBiomarkers).catch(showErrorNotification);
   }, [medplum]);
 
   if (!panel) {
@@ -127,9 +133,8 @@ export function BiomarkerPanel(): JSX.Element {
       return;
     }
 
-    // Rangos a persistir: los del servidor (ObservationDefinition) si están, si no la tabla local.
-    const sr = serverRanges[bm.code];
-    const { conventional, functional } = sr ? resolveServerRanges(sr, sex) : resolveBiomarkerRanges(bm, sex);
+    // El biomarcador ya trae los rangos del servidor si estaban disponibles.
+    const { conventional, functional } = resolveBiomarkerRanges(bm, sex);
     const qty = (v: number): Quantity => ({ value: v, unit: bm.unit, system: 'http://unitsofmeasure.org', code: bm.unit });
     const referenceRange: ObservationReferenceRange[] = [];
     const pushRange = (range: BiomarkerRange | undefined, tipo: 'convencional' | 'funcional'): void => {
@@ -184,9 +189,8 @@ export function BiomarkerPanel(): JSX.Element {
       </Text>
 
       <Accordion variant="separated" multiple>
-        {panel.biomarkers.map((bm) => {
-          const sr = serverRanges[bm.code];
-          const { conventional, functional } = sr ? resolveServerRanges(sr, sex) : resolveBiomarkerRanges(bm, sex);
+        {items.map((bm) => {
+          const { conventional, functional } = resolveBiomarkerRanges(bm, sex);
           const sexAware = isSexSpecific(bm);
           const noRangeForSex = sexAware && conventional === undefined && functional === undefined;
           const history = observationsFor(bm.code);

@@ -6,7 +6,7 @@
 // ObservationDefinition; este módulo los trae y los mapea a la forma que usa la UI.
 import type { MedplumClient } from '@medplum/core';
 import type { ObservationDefinition } from '@medplum/fhirtypes';
-import type { BiomarkerRange, PatientSex } from '../pages/health-record/Biomarkers.data';
+import type { Biomarker, BiomarkerRange, PatientSex } from '../pages/health-record/Biomarkers.data';
 
 /** CodeSystems canónicos de BioWellness (deben coincidir con el modelo FHIR en Medplum). */
 export const PANEL_SYSTEM = 'https://biowellness.ar/fhir/CodeSystem/panel-biomarcador';
@@ -68,5 +68,57 @@ export function resolveServerRanges(
   return {
     conventional: override?.conventional ?? r.conventional,
     functional: override?.functional ?? r.functional,
+  };
+}
+
+/** Biomarcador completo publicado por el servidor (código, panel, nombre, unidad + rangos). */
+export interface ServerBiomarker extends ServerBiomarkerRanges {
+  code: string;
+  system?: string;
+  title: string;
+  unit: string;
+  panel?: string;
+  description?: string;
+}
+
+/** Mapea una ObservationDefinition a un ServerBiomarker (panel desde category, nombre desde code, unidad desde quantitativeDetails). */
+export function parseServerBiomarker(od: ObservationDefinition): ServerBiomarker | undefined {
+  const coding = od.code?.coding?.[0];
+  const code = coding?.code;
+  if (!code) {
+    return undefined;
+  }
+  const panel =
+    od.category?.flatMap((c) => c.coding ?? []).find((c) => c.system === PANEL_SYSTEM)?.code ??
+    od.category?.[0]?.coding?.[0]?.code;
+  const unit = od.quantitativeDetails?.unit?.coding?.[0]?.code ?? od.quantitativeDetails?.unit?.text ?? '';
+  return {
+    code,
+    system: coding?.system,
+    title: coding?.display ?? od.code?.text ?? code,
+    unit,
+    panel,
+    ...parseObservationDefinition(od),
+  };
+}
+
+/** Trae todos los biomarcadores publicados por el servidor (ObservationDefinition). */
+export async function fetchServerBiomarkers(medplum: MedplumClient): Promise<ServerBiomarker[]> {
+  const defs = await medplum.searchResources('ObservationDefinition', '_count=200');
+  return defs.map(parseServerBiomarker).filter((b): b is ServerBiomarker => b !== undefined);
+}
+
+/** Convierte un ServerBiomarker al shape de UI (Biomarker). */
+export function serverBiomarkerToBiomarker(sb: ServerBiomarker): Biomarker {
+  return {
+    code: sb.code,
+    system: sb.system,
+    title: sb.title,
+    unit: sb.unit,
+    description: sb.description ?? '',
+    conventional: sb.conventional,
+    functional: sb.functional,
+    male: sb.male,
+    female: sb.female,
   };
 }
