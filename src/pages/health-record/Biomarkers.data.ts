@@ -131,17 +131,17 @@ export const biomarkerPanels: Record<string, BiomarkerPanelType> = {
         code: '2986-8',
         title: 'Testosterona total',
         unit: 'ng/mL',
-        description:
-          'Principal hormona androgénica (en ng/mL). Se muestra el rango masculino; el femenino es mucho menor (a definir con el laboratorio).',
+        description: 'Principal hormona androgénica. Los rangos difieren por sexo (en mujeres es mucho menor).',
         male: { conventional: { low: 1.93, high: 7.4 } },
+        female: { conventional: { low: 0.15, high: 0.7 } },
       },
       {
         code: '2991-8',
         title: 'Testosterona libre',
         unit: 'pg/mL',
-        description:
-          'Fracción de testosterona biológicamente activa. Se muestra el rango masculino (el femenino, a definir).',
+        description: 'Fracción de testosterona biológicamente activa. Los rangos difieren por sexo.',
         male: { conventional: { low: 38, high: 190 } },
+        female: { conventional: { low: 8, high: 27 } },
       },
       {
         code: '2191-5',
@@ -164,8 +164,9 @@ export const biomarkerPanels: Record<string, BiomarkerPanelType> = {
         title: 'Estradiol (E2)',
         unit: 'pg/mL',
         description:
-          'Principal estrógeno. En mujeres varía según la fase del ciclo (rango a definir); se muestra el rango de referencia masculino.',
+          'Principal estrógeno. En mujeres premenopáusicas varía con la fase del ciclo: folicular 20–150, ovulatoria 150–750, lútea 30–450; posmenopausia < 20–30 pg/mL.',
         male: { conventional: { low: 25, high: 43.2 }, functional: { low: 20, high: 35 } },
+        female: { conventional: { low: 30, high: 400 } },
       },
       {
         code: '50398-7',
