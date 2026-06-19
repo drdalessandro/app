@@ -1,112 +1,263 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
-import { AppShell, Box, Button, Container, Group, Stack, Text, Title, useMantineTheme } from '@mantine/core';
-import cx from 'clsx';
+import { AppShell, Badge, Box, Button, Card, Container, Group, SimpleGrid, Stack, Text, ThemeIcon, Title } from '@mantine/core';
+import {
+  IconActivity,
+  IconArrowRight,
+  IconBarbell,
+  IconBriefcase,
+  IconHeartbeat,
+  IconLungs,
+  IconMapPin,
+  IconMoon,
+  IconMountain,
+  IconSnowflake,
+  IconSun,
+  IconVaccine,
+} from '@tabler/icons-react';
+import type { Icon } from '@tabler/icons-react';
 import type { JSX } from 'react';
 import { useNavigate } from 'react-router';
 import { Footer } from '../../components/Footer';
 import DoctorImage from '../../img/landingPage/doctor.jpg';
-import EngineeringImage from '../../img/landingPage/engineering.jpg';
 import LabImage from '../../img/landingPage/laboratory.jpg';
-import WorkingEnvironmentImage from '../../img/landingPage/working-environment.jpg';
 import { Header } from './Header';
 import classes from './index.module.css';
 
-// NOTA: descripciones placeholder (lorem) — reemplazar por contenido real de BioWellness.
-const features = [
+interface FeatureItem {
+  readonly icon: Icon;
+  readonly title: string;
+  readonly description: string;
+}
+
+// Terapias (voz de paciente, contenido del Tactical Playbook; sin precios).
+const therapies: FeatureItem[] = [
   {
-    title: 'Planes de cuidado integrales',
-    description:
-      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
+    icon: IconLungs,
+    title: 'Oxigenoterapia Hiperbárica (HBOT)',
+    description: 'Hasta 6 veces más oxígeno en tus células: activa la regeneración profunda y reduce la inflamación.',
   },
   {
-    title: 'Sin costos ocultos',
-    description:
-      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
+    icon: IconMountain,
+    title: 'Entrenamiento mitocondrial (IHHT)',
+    description: 'Como entrenar tus células en los Andes sin salir de San Isidro: fortalecés tus mitocondrias en 45 minutos.',
   },
   {
-    title: 'Mensajería 24/7',
-    description:
-      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
+    icon: IconSun,
+    title: 'Fotobiomodulación (Red Light)',
+    description: 'Luz roja e infrarroja que repara tu piel y desinflama músculos y articulaciones en 30 minutos.',
   },
   {
-    title: 'Rigor clínico',
-    description:
-      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
+    icon: IconSnowflake,
+    title: 'Recovery Pro',
+    description: 'El circuito completo que usan los centros de longevidad del mundo: sauna, frío y red light en un gabinete privado.',
+  },
+  {
+    icon: IconActivity,
+    title: 'Compresión y Crioterapia',
+    description: 'Compresión neumática para el drenaje linfático y frío localizado para recuperar lesiones e inflamación.',
+  },
+  {
+    icon: IconVaccine,
+    title: 'Terapias IV y Medicina Regenerativa',
+    description: 'Sueros endovenosos y medicina regenerativa avanzada, siempre con evaluación médica previa.',
   },
 ];
 
+// Protocolo en 3 pasos (Playbook: "La arquitectura de un protocolo").
+const steps = [
+  {
+    n: 1,
+    title: 'Preparar el terreno',
+    description: 'La oxigenoterapia (HBOT) satura tu sangre de oxígeno, baja la inflamación y prepara tus células.',
+  },
+  {
+    n: 2,
+    title: 'Adaptar y regenerar',
+    description: 'Sobre ese terreno, el IHHT o las terapias médicas logran una adaptación más profunda.',
+  },
+  {
+    n: 3,
+    title: 'Recuperar',
+    description: 'Frío, sauna y fotobiomodulación desinflaman y reparan para cerrar el ciclo.',
+  },
+];
+
+// Perfiles (Playbook: matriz de combos y membresías, reformulados).
+const profiles: FeatureItem[] = [
+  { icon: IconBriefcase, title: 'Rendimiento y foco', description: 'Energía y claridad mental para tu día a día.' },
+  { icon: IconBarbell, title: 'Deporte y recuperación', description: 'Recuperá lesiones y rendí al máximo.' },
+  {
+    icon: IconHeartbeat,
+    title: 'Longevidad y anti-aging',
+    description: 'Optimización biológica integral para vivir mejor, más tiempo.',
+  },
+  { icon: IconMoon, title: 'Bienestar y descanso', description: 'Bajá el estrés y recuperá tu vitalidad.' },
+];
+
 export function LandingPage(): JSX.Element {
-  const theme = useMantineTheme();
   const navigate = useNavigate();
+  const go = (href: string): void => {
+    navigate(href)?.catch(console.error);
+  };
+
   return (
     <AppShell className={classes.outer} header={{ height: 64 }}>
       <Header />
-      <AppShell.Main className={classes.outer}>
-        <img className={classes.heroImage1} src={WorkingEnvironmentImage} alt="Working Environment" />
-        <Container>
-          <div className={classes.inner}>
-            <div className={classes.content}>
-              <Title className={classes.title}>
-                Longevidad y
-                <br />
-                <span className={classes.highlight}>medicina integrativa</span>
-              </Title>
-              <Text size="lg" c="dimmed" mt="md">
-                Centro premium de longevidad y medicina integrativa en San Isidro.
-              </Text>
-              <Group mt={30}>
-                <Button
-                  radius="xl"
-                  size="md"
-                  className={classes.control}
-                  onClick={() => navigate('/register')?.catch(console.error)}
-                >
-                  Crear cuenta
-                </Button>
-                <Button
-                  variant="default"
-                  radius="xl"
-                  size="md"
-                  className={classes.control}
-                  onClick={() => navigate('/signin')?.catch(console.error)}
-                >
-                  Iniciar sesión
-                </Button>
-              </Group>
-            </div>
-            <img className={classes.heroImage2} src={DoctorImage} alt="Doctor" />
-          </div>
+      <AppShell.Main>
+        {/* Hero */}
+        <Container size="lg" className={classes.hero}>
+          <Stack gap="lg" maw={780}>
+            <Badge variant="light" size="lg" radius="sm" leftSection={<IconMapPin size={14} />} w="fit-content">
+              Medicina 3.0 · San Isidro
+            </Badge>
+            <Title className={classes.heroTitle}>
+              Viví más años <span className={classes.accent}>en plena forma</span>
+            </Title>
+            <Text className={classes.lead}>
+              Optimización biológica y medicina integrativa para extender tu Healthspan. Detectamos, prevenimos y
+              optimizamos tu salud antes de los síntomas.
+            </Text>
+            <Group mt="md">
+              <Button size="md" radius="xl" rightSection={<IconArrowRight size={18} />} onClick={() => go('/register')}>
+                Crear cuenta
+              </Button>
+              <Button size="md" radius="xl" variant="default" onClick={() => go('/signin')}>
+                Iniciar sesión
+              </Button>
+            </Group>
+          </Stack>
         </Container>
-        <Container>
-          <div className={classes.inner}>
-            <div style={{ width: 500 }}>
-              <Title order={3} fw={500} c={theme.primaryColor} mb="lg">
-                Salud
+
+        {/* Medicina 3.0 */}
+        <Container size="lg" py={64}>
+          <SimpleGrid cols={{ base: 1, md: 2 }} spacing={48} verticalSpacing="xl" style={{ alignItems: 'center' }}>
+            <div>
+              <Text className={classes.eyebrow}>Medicina 3.0</Text>
+              <Title className={classes.sectionTitle} mt="sm" mb="md">
+                Del tratamiento de la enfermedad a la optimización de tu biología
               </Title>
-              <Title order={1} fw={500} mb="md">
-                Una mejor forma de cuidar tu salud
-              </Title>
-              <Text size="xl" c="gray">
-                Lorem ipsum dolor sit amet consect adipisicing elit. Possimus magnam voluptatum cupiditate veritatis in
-                accusamus quisquam.
+              <Text c="gray.7" size="lg">
+                La medicina reactiva espera a la enfermedad. Nosotros trabajamos antes: detectamos, prevenimos y
+                revertimos los signos del envejecimiento para extender tus años de vida en plena forma.
               </Text>
             </div>
-            <img className={classes.heroImage3} src={LabImage} alt="Laboratory" />
-          </div>
+            <img src={LabImage} alt="Laboratorio BioWellness" className={classes.editorialImg} />
+          </SimpleGrid>
         </Container>
-        <Container>
-          <div className={cx(classes.inner, classes.featureSection)}>
-            <Stack align="flex-end">
-              {features.map((feature, index) => (
-                <Box key={`feature-${index}`} className={classes.featureBox}>
-                  <Text className={classes.featureTitle}>{feature.title}</Text>
-                  <Text className={classes.featureDescription}>{feature.description}</Text>
-                </Box>
-              ))}
+
+        {/* Hormesis */}
+        <Box className={classes.band}>
+          <Container size="lg" py={64}>
+            <SimpleGrid cols={{ base: 1, md: 2 }} spacing={48} verticalSpacing="xl" style={{ alignItems: 'center' }}>
+              <img src={DoctorImage} alt="Profesional de BioWellness" className={classes.editorialImg} />
+              <div>
+                <Text className={classes.eyebrow}>Por qué funciona</Text>
+                <Title className={classes.sectionTitle} mt="sm" mb="md">
+                  El estímulo preciso que te hace más fuerte
+                </Title>
+                <Text c="gray.7" size="lg">
+                  Igual que el ejercicio sobre el músculo, aplicamos un estrés biológico controlado —sin esfuerzo
+                  físico— y tu cuerpo responde volviéndose más fuerte y eficiente: más energía, mejor recuperación y más
+                  resiliencia celular.
+                </Text>
+              </div>
+            </SimpleGrid>
+          </Container>
+        </Box>
+
+        {/* Terapias */}
+        <Container size="lg" py={64}>
+          <Stack align="center" gap="xs" mb="xl">
+            <Text className={classes.eyebrow}>Nuestras terapias</Text>
+            <Title className={classes.sectionTitle} ta="center" maw={760}>
+              Tecnología de los centros de longevidad del mundo, en San Isidro
+            </Title>
+          </Stack>
+          <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg">
+            {therapies.map((t) => (
+              <Card key={t.title} withBorder radius="lg" p="lg" className={classes.card}>
+                <ThemeIcon size={48} radius="md" variant="light">
+                  <t.icon size={26} stroke={1.5} />
+                </ThemeIcon>
+                <Text fw={600} fz="lg" mt="md">
+                  {t.title}
+                </Text>
+                <Text c="dimmed" mt={4}>
+                  {t.description}
+                </Text>
+              </Card>
+            ))}
+          </SimpleGrid>
+        </Container>
+
+        {/* Protocolo */}
+        <Box className={classes.dark}>
+          <Container size="lg" py={72}>
+            <Stack align="center" gap="xs" mb="xl">
+              <Text className={classes.eyebrowLight}>Cómo funciona</Text>
+              <Title className={classes.sectionTitle} ta="center" c="white">
+                Un protocolo, tres pasos
+              </Title>
             </Stack>
-            <img className={classes.heroImage4} src={EngineeringImage} alt="Laboratory" />
-          </div>
+            <SimpleGrid cols={{ base: 1, md: 3 }} spacing="xl">
+              {steps.map((s) => (
+                <div key={s.n}>
+                  <ThemeIcon size={48} radius="xl" variant="white" color="biowellness">
+                    <Text fw={700}>{s.n}</Text>
+                  </ThemeIcon>
+                  <Text fw={600} fz="lg" c="white" mt="md">
+                    {s.title}
+                  </Text>
+                  <Text c="gray.4" mt={4}>
+                    {s.description}
+                  </Text>
+                </div>
+              ))}
+            </SimpleGrid>
+          </Container>
+        </Box>
+
+        {/* Para quién */}
+        <Container size="lg" py={64}>
+          <Stack align="center" gap="xs" mb="xl">
+            <Text className={classes.eyebrow}>Pensado para vos</Text>
+            <Title className={classes.sectionTitle} ta="center">
+              Un plan según tu objetivo
+            </Title>
+          </Stack>
+          <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="lg">
+            {profiles.map((p) => (
+              <Card key={p.title} withBorder radius="lg" p="lg" className={classes.card}>
+                <ThemeIcon size={44} radius="xl" variant="light">
+                  <p.icon size={24} stroke={1.5} />
+                </ThemeIcon>
+                <Text fw={600} mt="md">
+                  {p.title}
+                </Text>
+                <Text c="dimmed" size="sm" mt={4}>
+                  {p.description}
+                </Text>
+              </Card>
+            ))}
+          </SimpleGrid>
+        </Container>
+
+        {/* CTA final */}
+        <Container size="lg" pb={80}>
+          <Box className={classes.ctaCard}>
+            <Stack align="center" gap="md" p={48}>
+              <Title className={classes.sectionTitle} ta="center" c="white">
+                Empezá tu camino hacia la longevidad
+              </Title>
+              <Text c="gray.3" ta="center" maw={540}>
+                Creá tu cuenta y cargá tus biomarcadores para que el equipo de BioWellness diseñe tu protocolo.
+              </Text>
+              <Button size="lg" radius="xl" variant="white" mt="xs" onClick={() => go('/register')}>
+                Crear cuenta
+              </Button>
+            </Stack>
+          </Box>
         </Container>
       </AppShell.Main>
       <Footer />
