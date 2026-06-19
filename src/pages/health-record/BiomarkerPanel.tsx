@@ -26,8 +26,8 @@ import type { JSX } from 'react';
 import { Navigate, useParams } from 'react-router';
 import { LineChart } from '../../components/LineChart';
 import { showErrorNotification } from '../../utils/notifications';
-import type { Biomarker, BiomarkerRange } from './Biomarkers.data';
-import { biomarkerPanels } from './Biomarkers.data';
+import type { Biomarker, BiomarkerRange, PatientSex } from './Biomarkers.data';
+import { biomarkerPanels, isSexSpecific, resolveBiomarkerRanges } from './Biomarkers.data';
 
 const chartColors = {
   backgroundColor: 'rgba(29, 112, 214, 0.7)',
@@ -40,17 +40,17 @@ function inRange(value: number, range: BiomarkerRange): boolean {
 }
 
 /** Color del semáforo: verde = rango funcional, amarillo = convencional, rojo = fuera. */
-function rangeColor(value: number | undefined, bm: Biomarker): string {
+function rangeColor(value: number | undefined, functional?: BiomarkerRange, conventional?: BiomarkerRange): string {
   if (value === undefined) {
     return 'gray';
   }
-  if (bm.functional && inRange(value, bm.functional)) {
+  if (functional && inRange(value, functional)) {
     return 'green';
   }
-  if (bm.conventional && inRange(value, bm.conventional)) {
+  if (conventional && inRange(value, conventional)) {
     return 'yellow';
   }
-  if (bm.conventional || bm.functional) {
+  if (functional || conventional) {
     return 'red';
   }
   return 'gray';
@@ -74,6 +74,7 @@ export function BiomarkerPanel(): JSX.Element {
   const { panelId } = useParams();
   const medplum = useMedplum();
   const patient = medplum.getProfile() as Patient;
+  const sex: PatientSex = patient.gender === 'male' ? 'male' : patient.gender === 'female' ? 'female' : undefined;
   const panel = panelId ? biomarkerPanels[panelId] : undefined;
 
   const [observations, setObservations] = useState<Observation[]>([]);
@@ -134,7 +135,7 @@ export function BiomarkerPanel(): JSX.Element {
       subject: createReference(patient),
       effectiveDateTime: date,
       code: {
-        coding: [{ system: 'http://loinc.org', code: bm.code, display: bm.title }],
+        coding: [{ system: bm.system ?? 'http://loinc.org', code: bm.code, display: bm.title }],
         text: bm.title,
       },
       valueQuantity: {
@@ -175,9 +176,12 @@ export function BiomarkerPanel(): JSX.Element {
 
       <Accordion variant="separated" multiple>
         {panel.biomarkers.map((bm) => {
+          const { conventional, functional } = resolveBiomarkerRanges(bm, sex);
+          const sexAware = isSexSpecific(bm);
+          const noRangeForSex = sexAware && conventional === undefined && functional === undefined;
           const history = observationsFor(bm.code);
           const latest = history[0]?.valueQuantity?.value;
-          const color = rangeColor(latest, bm);
+          const color = rangeColor(latest, functional, conventional);
 
           const ascending = [...history].reverse();
           const chartData: ChartData<'line', number[]> = {
@@ -208,12 +212,27 @@ export function BiomarkerPanel(): JSX.Element {
                   </Text>
                   <Group gap="xl">
                     <Text size="sm">
-                      <b>Rango funcional:</b> {formatRange(bm.functional)} {bm.unit}
+                      <b>Rango funcional:</b> {formatRange(functional)} {bm.unit}
                     </Text>
                     <Text size="sm">
-                      <b>Rango convencional:</b> {formatRange(bm.conventional)} {bm.unit}
+                      <b>Rango convencional:</b> {formatRange(conventional)} {bm.unit}
                     </Text>
                   </Group>
+                  {sexAware &&
+                    (sex ? (
+                      <Text size="xs" c="dimmed">
+                        Rango según tu sexo: {sex === 'male' ? 'masculino ♂' : 'femenino ♀'}
+                      </Text>
+                    ) : (
+                      <Text size="xs" c="dimmed">
+                        Cargá tu sexo en el perfil para ver el rango de referencia correcto.
+                      </Text>
+                    ))}
+                  {noRangeForSex && (
+                    <Text size="xs" c="orange.7">
+                      Rango no definido para tu sexo — a confirmar con tu médico.
+                    </Text>
+                  )}
 
                   <Group justify="flex-end">
                     <Button leftSection={<IconPlus size={16} />} onClick={() => openModal(bm)}>
@@ -243,7 +262,7 @@ export function BiomarkerPanel(): JSX.Element {
                                     {v} {bm.unit}
                                   </Table.Td>
                                   <Table.Td>
-                                    <Badge color={rangeColor(v, bm)} variant="dot" size="sm" />
+                                    <Badge color={rangeColor(v, functional, conventional)} variant="dot" size="sm" />
                                   </Table.Td>
                                 </Table.Tr>
                               );
