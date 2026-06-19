@@ -3,18 +3,34 @@
 import { Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { createReference } from '@medplum/core';
-import type { Patient, QuestionnaireResponse } from '@medplum/fhirtypes';
+import type { Patient, Questionnaire, QuestionnaireResponse } from '@medplum/fhirtypes';
 import { Document, QuestionnaireForm, useMedplum } from '@medplum/react';
 import { IconCircleCheck } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 import { showErrorNotification } from '../utils/notifications';
-import { intakeQuestionnaire } from './intake.questionnaire';
+import { INTAKE_QUESTIONNAIRE_URL, intakeQuestionnaire } from './intake.questionnaire';
 
 export function PatientIntakeQuestionnairePage(): JSX.Element {
   const medplum = useMedplum();
   const patient = medplum.getProfile() as Patient;
   const [isSubmitted, setIsSubmitted] = useState(false);
+  // Fuente de verdad: el Questionnaire del server (compartido con la app clínica).
+  // Si no está cargado o no hay acceso, se usa la definición local como fallback.
+  const [questionnaire, setQuestionnaire] = useState<Questionnaire>(intakeQuestionnaire);
+
+  useEffect(() => {
+    medplum
+      .searchOne('Questionnaire', { url: INTAKE_QUESTIONNAIRE_URL })
+      .then((q) => {
+        if (q) {
+          setQuestionnaire(q);
+        }
+      })
+      .catch(() => {
+        /* sin acceso o no cargado: se mantiene el fallback local */
+      });
+  }, [medplum]);
 
   async function handleQuestionnaireSubmit(formData: QuestionnaireResponse): Promise<void> {
     try {
@@ -53,7 +69,7 @@ export function PatientIntakeQuestionnairePage(): JSX.Element {
           </Text>
         </Stack>
       ) : (
-        <QuestionnaireForm questionnaire={intakeQuestionnaire} onSubmit={handleQuestionnaireSubmit} />
+        <QuestionnaireForm questionnaire={questionnaire} onSubmit={handleQuestionnaireSubmit} />
       )}
     </Document>
   );
