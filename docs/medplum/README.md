@@ -13,13 +13,20 @@ compartirlos con la app clínica / recepción.
 AccessPolicy del rol **paciente** (la que usa el `invite` de Recepción y la que
 debería estar como `defaultPatientAccessPolicy` del proyecto).
 
+> **Fuente de verdad: el seed de recepción.** Esta definición es un **espejo** de
+> `recepcionistas/src/fhir/access-policies.ts` (`POLICY_PACIENTE_PORTAL`), que
+> `npm run seed` aplica por `name` (haría *upsert* y sobrescribiría lo que haya en
+> el server). Mantener **ambos archivos idénticos**: si cambia uno, cambiar el otro.
+
 Cubre todo lo que el portal lee/escribe:
 
-- **Compartimento del paciente** (lectura + escritura donde aplica): `Patient`
-  (perfil), `Observation` (biomarcadores y signos vitales), `QuestionnaireResponse`,
-  `DocumentReference` (consentimiento), `Communication` (mensajes); y de solo
-  lectura por paciente: `DiagnosticReport`, `CarePlan`, `MedicationRequest`,
-  `Immunization`, `Coverage`, `Appointment`.
+- **Compartimento del paciente** — **escritura** (autogestión): `Patient` (perfil),
+  `Observation` (biomarcadores y signos vitales), `QuestionnaireResponse`,
+  `DocumentReference` (consentimiento), `Communication` (mensajes).
+- **Compartimento del paciente** — **solo lectura**: `Appointment`, `Coverage`,
+  `Invoice` (pagos/señas), `DiagnosticReport`, `CarePlan`, `MedicationRequest`,
+  `Immunization`. La agenda y los planes/pagos los gestiona Recepción; reservar es
+  por *modelo de solicitud*, así que el paciente no escribe `Appointment`.
 - **Definicional / compartido** (`readonly`): `ObservationDefinition` (rangos),
   `Questionnaire`, `Schedule`, `Slot`, `HealthcareService`, `Practitioner`,
   `Organization`, `Binary`.

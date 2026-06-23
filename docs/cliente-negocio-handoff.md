@@ -1,25 +1,43 @@
 # Handoff — Capa Cliente/negocio (Sesiones, Pagos, Reservar por bots)
 
-Contexto para la **sesión nueva con ambos repos** (`portal` + `recepcionistas`).
+Contexto para la integración con ambos repos (`portal` + `recepcionistas`).
 Objetivo: cablear en el portal las **Sesiones** y **Pagos** del eje Cliente, y la
-**reserva de turnos por bots** de recepción.
+**reserva de turnos** de recepción.
 
-> Abrir esa sesión scopeada a **ambos** repos: `recepcionistas` (leer el modelo) y
+> Abrir la sesión scopeada a **ambos** repos: `recepcionistas` (leer el modelo) y
 > `portal` (donde se hacen los cambios de código).
 
-## Estado actual del portal (ya hecho)
+## ✅ Cableado en esta sesión
+
+- **Sesiones** y **Pagos** de `/membership` ya son **reales** (antes placeholders).
+  - Nuevo módulo de solo lectura `src/fhir/membership.ts`: lee `Coverage`/`Invoice`
+    (acotados al paciente por la AccessPolicy) y arma el saldo —sin recalcular
+    reglas—, espejando el modelo de recepción
+    (`recepcionistas/src/fhir/coverage.ts`, `src/lib/planes.ts`,
+    `app/src/lib/panelPlanes.ts`).
+  - **Sesiones**: por cada plan activo muestra los baldes *Libres / Agendadas /
+    Realizadas / Total* y el aviso de vencimiento (paquete) o renovación (membresía).
+  - **Pagos**: lista los `Invoice` del paciente (fecha, concepto, medio, monto ARS,
+    estado, marca de *Seña*).
+- **AccessPolicy** reconciliada: se sumó `Invoice` (faltaba, sin él Pagos no leía
+  nada) y se unificó con la fuente de verdad del seed de recepción
+  (`recepcionistas/src/fhir/access-policies.ts`). `Coverage`, `Invoice` y
+  `Appointment` quedan de **solo lectura**. Mirror en
+  `docs/medplum/access-policy-paciente-portal.json`. **Aplicar en el servidor.**
+
+## Estado actual del portal
 
 - **3 ejes navegables**: Usuario → *Cuenta* (`/account`), Cliente → *Membresía*
   (`/membership`), Paciente → *Salud* (`/health-record`).
-- **Membresía** (`src/pages/membership/index.tsx`): hoy muestra
+- **Membresía** (`src/pages/membership/index.tsx`): muestra
   - **Mis turnos** — real (`<MyAppointments>`, `Appointment?patient=…`).
-  - **Sesiones** — *placeholder* (texto "lo estamos conectando").
+  - **Sesiones** — ✅ real (saldo por plan desde `Coverage` + turnos).
   - **Cobertura** — real (`Coverage?beneficiary=…`).
-  - **Pagos** — *placeholder*.
+  - **Pagos** — ✅ real (`Invoice?subject=…`).
 - **Reservar**: el botón "+" del menú inferior (`src/components/BottomNav.tsx`) y
   el Header desktop llevan a `/get-care` (`src/pages/GetCarePage.tsx`), que hoy usa
   las ops nativas `Appointment/$find` y `$hold`, **deshabilitado** con un guard
-  ("Reserva en preparación") hasta que haya agenda.
+  ("Reserva en preparación"). **Pendiente** (ver abajo): pasar a *modelo de solicitud*.
 - **AccessPolicy** del paciente: `docs/medplum/access-policy-paciente-portal.json`.
 
 ## Lo que hay que extraer de `recepcionistas`
@@ -60,10 +78,29 @@ Objetivo: cablear en el portal las **Sesiones** y **Pagos** del eje Cliente, y l
 | Descubrir disponibilidad | nuevo `src/fhir/booking.ts` | Listar terapias reservables + slots según D. |
 | Permisos | `docs/medplum/access-policy-paciente-portal.json` | Sumar recursos de A/B; aplicar en el server. |
 
-## Checklist sesión nueva
-- [ ] Leer el modelo en `recepcionistas` y completar A–E (con JSON de ejemplo).
-- [ ] `src/fhir/membership.ts`: fetch de sesiones y pagos por paciente.
-- [ ] Cablear secciones *Sesiones* y *Pagos* en `/membership`.
-- [ ] `src/fhir/booking.ts` + `GetCarePage`: reservar por bots, reflejar reglas.
-- [ ] Actualizar AccessPolicy y aplicarla en el server.
-- [ ] `npm run build` verde.
+## Reserva online — modelo de **solicitud** (próxima sesión)
+
+Decisión de negocio/seguridad tomada con el cliente: el paciente **no** escribe
+`Appointment` ni ejecuta bots directamente. El portal genera una **solicitud** que
+Recepción confirma desde su app (donde corren las reglas: R-01 HBOT primero,
+R-07 capacidad/desfasaje, R-13 ventana, seña 50%). Beneficio: no abre permisos de
+ejecución de bots ni reescritura de agenda al paciente.
+
+Pendiente para implementarlo (sin tocar lo de esta sesión):
+1. **Recepción** define el recurso de la solicitud (recomendado `Task`, o
+   `Communication` con `category=solicitud-turno`) y un bot que la cree/atienda.
+2. **Portal** (`GetCarePage`): reemplazar el `$find`/`$hold` por un formulario que
+   cree la solicitud (terapia + franja preferida + nota) acotada al paciente.
+3. **AccessPolicy**: si se usa `Task`, sumar `Task` (escritura acotada a
+   `Task?requester=%patient` o equivalente) en ambos archivos espejo.
+4. Si en el futuro se decide **reserva inmediata por bots**, antes hay que endurecer
+   `bw-reservar-turno`/`bw-reservar-combo` para derivar el paciente del login (no del
+   input) y dar permiso de ejecutar **solo** esos bots.
+
+## Checklist
+- [x] Leer el modelo en `recepcionistas` (Sesiones/Pagos/Cobertura).
+- [x] `src/fhir/membership.ts`: fetch de sesiones y pagos por paciente.
+- [x] Cablear secciones *Sesiones* y *Pagos* en `/membership`.
+- [x] Reconciliar AccessPolicy (sumar `Invoice`; unificar con el seed). **Falta aplicarla en el server.**
+- [x] `npm run build` verde.
+- [ ] Reserva online por **solicitud** (Task/Communication) — próxima sesión.
