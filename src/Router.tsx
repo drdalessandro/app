@@ -23,6 +23,7 @@ import { Vaccine } from './pages/health-record/Vaccine';
 import { Vaccines } from './pages/health-record/Vaccines';
 import { Vitals } from './pages/health-record/Vitals';
 import { HomePage } from './pages/HomePage';
+import { LE8QuestionnairePage } from './pages/LE8QuestionnairePage';
 import { MembershipPage } from './pages/membership';
 import { MessagesPage } from './pages/MessagesPage';
 import { ObservationPage } from './pages/ObservationPage';
@@ -56,6 +57,9 @@ export function Router(): JSX.Element {
         <Route path="vaccines/:vaccineId" element={<Vaccine />} />
         <Route path="vitals" element={<Vitals />} />
         <Route path="vitals/:measurementId" element={<Measurement />} />
+        {/* Life's Essential 8: cuestionarios conductuales que responde el paciente. */}
+        <Route path="cuestionarios" element={<Navigate replace to="/health-record/cuestionarios/le8-sleep-psqi-v1" />} />
+        <Route path="cuestionarios/:slug" element={<LE8QuestionnairePage />} />
       </Route>
       <Route path="Observation/:observationId" element={<ObservationPage />} />
       <Route path="care-plan" element={<CarePlanPage />}>
