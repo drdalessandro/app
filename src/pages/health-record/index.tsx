@@ -6,6 +6,7 @@ import type { JSX } from 'react';
 import { Outlet } from 'react-router';
 import { Loading } from '../../components/Loading';
 import { SideMenu } from '../../components/SideMenu';
+import { LE8_QUESTIONNAIRES } from '../../le8';
 import { biomarkerPanels } from './Biomarkers.data';
 import { measurementsMeta } from './Measurement.data';
 
@@ -13,6 +14,14 @@ const sideMenu = {
   title: 'Historia Clínica',
   menu: [
     { name: 'Resultados de Laboratorio', href: '/health-record/lab-results' },
+    {
+      name: 'Mi salud cardiovascular',
+      href: '/health-record/cuestionarios',
+      subMenu: LE8_QUESTIONNAIRES.map((q) => ({
+        name: q.label,
+        href: `/health-record/cuestionarios/${q.slug}`,
+      })),
+    },
     {
       name: 'Biomarcadores',
       href: '/health-record/biomarkers',
