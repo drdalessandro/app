@@ -14,12 +14,12 @@ export default defineConfig({
   envPrefix: ['MEDPLUM_', 'GOOGLE_', 'RECAPTCHA_'],
   plugins: [react()],
   preview: {
-    port: 3006,
+    port: 4178,
     allowedHosts: true,
-    host: 'app.segundaopinion.org',
+    host: 'app.segundaopinionmedica.org',
   },
   server: {
-    port: 3006,
+    port: 4178,
     host: 'localhost',
   },
   test: {
