@@ -30,7 +30,9 @@ import { ObservationPage } from './pages/ObservationPage';
 import { PatientIntakeQuestionnairePage } from './pages/PatientIntakeQuestionnairePage';
 import { QuestionnairePage } from './pages/QuestionnairePage';
 import { ScreeningQuestionnairePage } from './pages/ScreeningQuestionnairePage';
+import { MiSegundaOpinion } from './pages/MiSegundaOpinion';
 import { SignOutPage } from './pages/SignOutPage';
+import { SolicitarSOM } from './pages/SolicitarSOM';
 
 export function Router(): JSX.Element {
   return (
@@ -69,6 +71,8 @@ export function Router(): JSX.Element {
         <Route path="action-items/:itemId" element={<ActionItem />} />
       </Route>
       <Route path="get-care" element={<GetCare />} />
+      <Route path="solicitar-som" element={<SolicitarSOM />} />
+      <Route path="mi-segunda-opinion" element={<MiSegundaOpinion />} />
       <Route path="membership" element={<MembershipPage />} />
       <Route path="account" element={<AccountPage />}>
         <Route index element={<Navigate replace to="/account/profile" />} />
