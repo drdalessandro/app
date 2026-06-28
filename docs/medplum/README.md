@@ -24,16 +24,21 @@ Cubre todo lo que el portal lee/escribe:
   `Observation` (biomarcadores y signos vitales), `QuestionnaireResponse`,
   `DocumentReference` (consentimiento), `Communication` (mensajes).
 - **Compartimento del paciente** — **solo lectura**: `Appointment`, `Coverage`,
-  `Invoice` (pagos/señas), `DiagnosticReport`, `CarePlan`, `MedicationRequest`,
+  `Invoice` (pagos/señas), `DiagnosticReport`, `ServiceRequest` (sus solicitudes de
+  Segunda Opinión), `RiskAssessment` (score PREVENT), `CarePlan`, `MedicationRequest`,
   `Immunization`, `Task` (sus solicitudes de turno). La agenda y los planes/pagos
   los gestiona Recepción; reservar es por *modelo de solicitud*, así que el paciente
-  no escribe `Appointment`.
+  no escribe `Appointment`. La **Segunda Opinión** también es por *modelo de solicitud*:
+  el paciente escribe su `QuestionnaireResponse` + `DocumentReference` y ejecuta el bot
+  `som-solicitar`, que crea la `ServiceRequest`; el informe (`DiagnosticReport`),
+  el score (`RiskAssessment`) y el PDF los genera el bot `bot-som-report` (ver
+  `bot-som-interface.md`) y el paciente solo los lee.
 - **Definicional / compartido** (`readonly`): `ObservationDefinition` (rangos),
   `Questionnaire`, `Schedule`, `Slot`, `HealthcareService`, `Practitioner`,
   `Organization`, `Binary`.
-- **Bot** (`readonly`, acotado): solo `bw-solicitar-turno` (criteria
-  `Bot?name=bw-solicitar-turno`). Es el único bot que el paciente puede ejecutar
-  (crea su `Task` de solicitud); no puede ejecutar ningún otro bot.
+- **Bot** (`readonly`, acotado): `bw-solicitar-turno` (crea su `Task` de solicitud de
+  turno) y `som-solicitar` (crea su `ServiceRequest` de Segunda Opinión). Son los
+  únicos bots que el paciente puede ejecutar; no puede ejecutar ningún otro.
 
 `%patient` lo resuelve Medplum al `Patient` del login. Si en tu server no
 resuelve, usar `%profile` (para un login de paciente es el mismo `Patient`).

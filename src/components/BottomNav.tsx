@@ -14,6 +14,7 @@ import {
   IconMessage,
   IconPlus,
   IconReportMedical,
+  IconStethoscope,
   IconUser,
   IconWallet,
 } from '@tabler/icons-react';
@@ -50,6 +51,12 @@ interface QuickAction {
 }
 
 const quickActions: QuickAction[] = [
+  {
+    icon: IconStethoscope,
+    label: 'Pedir Segunda Opinión',
+    description: 'Iniciá una segunda opinión cardiológica.',
+    href: '/solicitar-som',
+  },
   { icon: IconCalendarPlus, label: 'Reservar turno', description: 'Pedí tu próxima sesión o consulta.', href: '/get-care' },
   {
     icon: IconReportMedical,
