@@ -1,37 +1,42 @@
 // SPDX-FileCopyrightText: Copyright Segunda Opinión Médica
 // SPDX-License-Identifier: Apache-2.0
 //
-// Solicitudes de turno (modelo de "solicitud"): el paciente PIDE un turno y
-// Recepción lo CONFIRMA con los bots de reserva (que aplican las reglas). El portal
-// nunca escribe la agenda: solo ejecuta el bot `bw-solicitar-turno` (único bot que
-// su AccessPolicy le permite) y lee sus propias solicitudes (Task).
+// Solicitudes de turno (modelo de "solicitud"): el paciente PIDE un turno para una
+// consulta o estudio cardiovascular y Recepción lo CONFIRMA con los bots de reserva
+// (que aplican las reglas). El portal nunca escribe la agenda: solo ejecuta el bot
+// `som-solicitar-turno` (único bot de turnos que su AccessPolicy le permite) y lee sus
+// propias solicitudes (Task).
 import type { MedplumClient } from '@medplum/core';
 import { getReferenceString } from '@medplum/core';
 import type { Patient, Task } from '@medplum/fhirtypes';
 
-const BOT_SOLICITAR = 'bw-solicitar-turno';
+const BOT_SOLICITAR = 'som-solicitar-turno';
 
 /**
- * Terapias ofrecibles en la solicitud. Son las "familias" públicas del catálogo
- * (sin precios ni reglas, que viven en Recepción). Recepción elige el servicio
- * exacto al confirmar.
+ * Servicios cardiovasculares ofrecibles en la solicitud de turno. Son las "familias"
+ * públicas del catálogo (sin precios ni reglas, que viven en Recepción). Recepción elige
+ * el servicio/práctica exacto al confirmar.
+ *
+ * ⚠️ Estos `codigo` deben COINCIDIR con el catálogo del backend `recepcionistas` y con lo
+ * que valida el bot `som-solicitar-turno`. Validar también contra segundaopinionmedica.org.
  */
-export const TERAPIAS: { codigo: string; label: string }[] = [
-  { codigo: 'HBOT', label: 'Cámara hiperbárica (HBOT)' },
-  { codigo: 'IHHT', label: 'IHHT (hipoxia–hiperoxia)' },
-  { codigo: 'RED_LIGHT', label: 'Red Light' },
-  { codigo: 'RECOVERY_PRO', label: 'Recovery Pro' },
-  { codigo: 'COMPRESION', label: 'Compresión' },
-  { codigo: 'CRIO', label: 'Crioterapia' },
-  { codigo: 'IV_THERAPY', label: 'Terapia IV' },
-  { codigo: 'TERAPIA_BIOLOGICA', label: 'Terapia biológica' },
-  { codigo: 'MASAJE_OSTEOPATIA', label: 'Masaje / Osteopatía' },
-  { codigo: 'CONSULTA', label: 'Consulta médica' },
+export const SERVICIOS: { codigo: string; label: string }[] = [
+  { codigo: 'CONSULTA_CARDIO', label: 'Consulta cardiológica' },
+  { codigo: 'EVALUACION_INICIAL', label: 'Evaluación inicial' },
+  { codigo: 'TELECONSULTA', label: 'Teleconsulta' },
+  { codigo: 'ECG', label: 'Electrocardiograma (ECG)' },
+  { codigo: 'ECOCARDIOGRAMA', label: 'Ecocardiograma Doppler' },
+  { codigo: 'ERGOMETRIA', label: 'Ergometría' },
+  { codigo: 'HOLTER', label: 'Holter 24 h' },
+  { codigo: 'MAPA', label: 'MAPA (presión 24 h)' },
+  { codigo: 'MONITOREO_REMOTO', label: 'Monitoreo remoto' },
+  { codigo: 'REHABILITACION_CV', label: 'Rehabilitación cardiovascular' },
+  { codigo: 'LABORATORIO_CARDIO', label: 'Laboratorio cardiometabólico' },
 ];
 
 export interface NuevaSolicitud {
-  terapia: string;
-  terapiaCodigo?: string;
+  servicio: string;
+  servicioCodigo?: string;
   /** Fecha/hora preferida en ISO (opcional). */
   preferenciaInicio?: string;
   /** Preferencia en texto libre (opcional). */

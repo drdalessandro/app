@@ -36,9 +36,10 @@ Cubre todo lo que el portal lee/escribe:
 - **Definicional / compartido** (`readonly`): `ObservationDefinition` (rangos),
   `Questionnaire`, `Schedule`, `Slot`, `HealthcareService`, `Practitioner`,
   `Organization`, `Binary`.
-- **Bot** (`readonly`, acotado): `bw-solicitar-turno` (crea su `Task` de solicitud de
-  turno) y `som-solicitar` (crea su `ServiceRequest` de Segunda Opinión). Son los
-  únicos bots que el paciente puede ejecutar; no puede ejecutar ningún otro.
+- **Bot** (`readonly`, acotado): `som-solicitar-turno` (crea su `Task` de solicitud de
+  turno de una consulta/estudio cardiovascular) y `som-solicitar` (crea su
+  `ServiceRequest` de Segunda Opinión). Son los únicos bots que el paciente puede
+  ejecutar; no puede ejecutar ningún otro.
 
 `%patient` lo resuelve Medplum al `Patient` del login. Si en tu server no
 resuelve, usar `%profile` (para un login de paciente es el mismo `Patient`).

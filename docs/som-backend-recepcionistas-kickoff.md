@@ -81,7 +81,8 @@ y unos permisos. El contrato completo está en el repo `app`:
      con `reasonCode.text = motivo`, `supportingInfo` = QR + docs, extensión
      `…/som-origin = origin`. Endurecer con `runAsUser`.
    - Output: `{ ok, mensaje?, serviceRequestId? }`.
-   - PATRÓN A SEGUIR: clonar la mecánica del bot existente **`bw-solicitar-turno`**.
+   - PATRÓN A SEGUIR: la misma mecánica del bot de turnos `som-solicitar-turno` (ver §
+     "Turnos rebrandeados" abajo).
 
 2. **Bot `bot-som-report`** (interno; lo dispara una `Subscription` sobre
    `ServiceRequest?status=active&code=…som-services|som-cardiology`):
@@ -120,13 +121,34 @@ por los servicios cardiovasculares de SOM, tomados del menú de segundaopinionme
 - Historia Clínica · Contenidos
 NO inventar precios ni reglas: tomarlos del sitio / del usuario.
 
+## TURNOS REBRANDEADOS (el portal ya cambió; el backend debe alinear)
+
+El portal migró el flujo de "Pedir un turno" de terapias funcionales a servicios
+cardiovasculares (`app/src/fhir/solicitudes.ts`). El backend debe alinear:
+
+1. **Renombrar el bot** `bw-solicitar-turno` → **`som-solicitar-turno`** (deploy +
+   AccessPolicy). El portal ya ejecuta `som-solicitar-turno` y la AccessPolicy espejo ya
+   lo whitelistea. (También conviene de-brandear los bots de reserva
+   `bw-reservar-turno`/`bw-reservar-combo` → `som-*`; el portal no los ejecuta, pero el
+   prefijo `bw` = marca anterior.)
+2. **Input del bot** (lo que envía el portal): `{ pacienteRef, servicio, servicioCodigo,
+   preferenciaInicio?, preferenciaTexto?, nota }`. Antes eran `terapia`/`terapiaCodigo`;
+   ahora son **`servicio`/`servicioCodigo`**.
+3. **Catálogo de `servicioCodigo`** que el bot debe aceptar/validar (debe coincidir con
+   `SERVICIOS` en `app/src/fhir/solicitudes.ts`):
+   `CONSULTA_CARDIO`, `EVALUACION_INICIAL`, `TELECONSULTA`, `ECG`, `ECOCARDIOGRAMA`,
+   `ERGOMETRIA`, `HOLTER`, `MAPA`, `MONITOREO_REMOTO`, `REHABILITACION_CV`,
+   `LABORATORIO_CARDIO`. (Validar/ajustar contra el sitio y los precios reales.)
+4. El `Task` sigue con `code=solicitud-turno` (el portal lo lee así). Reglas de reserva
+   funcionales (p.ej. "HBOT primero") ya no aplican; reemplazar por las de cardiología.
+
 ## ORDEN DE TRABAJO (recon primero, NO refactor)
 1. `ls -la && cat package.json` y leer el README.
 2. Mapear lo existente que se REUSA/MODIFICA:
-   - Bots: `bw-solicitar-turno`, `bw-reservar-turno`, `bw-reservar-combo` (ver cómo se
-     definen/despliegan: `npm run deploy:bots`).
+   - Bots: `bw-solicitar-turno` (→ renombrar a `som-solicitar-turno`), `bw-reservar-turno`,
+     `bw-reservar-combo` (ver cómo se definen/despliegan: `npm run deploy:bots`).
    - Seed/FHIR: `src/fhir/access-policies.ts`, `src/fhir/coverage.ts`, `src/lib/planes.ts`,
-     catálogo de terapias/servicios, `npm run seed`.
+     catálogo de terapias → reemplazar por el de servicios cardiovasculares, `npm run seed`.
    - App de recepción (vistas, p.ej. "Solicitudes").
 3. Proponer el plan de CAMBIOS sobre esos archivos (no nuevos), confirmarlo, y recién
    entonces editar.

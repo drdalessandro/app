@@ -26,7 +26,7 @@ El portal (`src/fhir/som.ts`) define las constantes canónicas que **deben coinc
 
 ## 1. Bot `som-solicitar` (whitelisteado para el paciente)
 
-Único bot, además de `bw-solicitar-turno`, que la AccessPolicy del paciente permite
+Único bot, además de `som-solicitar-turno`, que la AccessPolicy del paciente permite
 ejecutar. Crea la **orden** a partir de lo que el paciente ya escribió en su
 compartimento (su `QuestionnaireResponse` y sus `DocumentReference`).
 
@@ -53,7 +53,7 @@ Una `ServiceRequest` (status `active`, intent `order`) con:
 - `performer`: el `Practitioner` del Dr. Barbagelata (si está disponible)
 
 Recomendado endurecer con `runAsUser` para que el `requester` no se pueda falsificar
-(igual que la nota de seguridad de `bw-solicitar-turno`).
+(igual que la nota de seguridad de `som-solicitar-turno`).
 
 ### Output (lo que el portal espera, `ResultadoSOM`)
 

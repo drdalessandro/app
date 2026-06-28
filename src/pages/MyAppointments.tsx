@@ -38,7 +38,7 @@ function statusBadge(status?: string): JSX.Element {
   );
 }
 
-// Nombre del servicio/terapia del turno, con degradación elegante según lo que traiga.
+// Nombre del servicio del turno, con degradación elegante según lo que traiga.
 function serviceLabel(appt: Appointment): string {
   return (
     appt.serviceType?.[0]?.coding?.[0]?.display ??
