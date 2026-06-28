@@ -2,12 +2,15 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /**
- * Contenido del Consentimiento Informado de SEGUNDA OPINIÓN MÉDICA (Shanti Om SRL).
+ * Contenido del Consentimiento Informado de Segunda Opinión Médica.
  *
- * Fuente: documento oficial provisto por Segunda Opinión Médica. La sección 1 (Datos del
- * cliente) se completa dinámicamente con los datos del paciente logueado y la
- * firma. El resto del texto se reproduce de forma fiel para su lectura y para
- * almacenarlo en el DocumentReference firmado.
+ * Servicio de segunda opinión médica cardiovascular dirigido por el Dr. Alejandro
+ * Barbagelata. La sección 1 (Datos del paciente) se completa dinámicamente con los datos
+ * del paciente logueado y la firma; el resto del texto se reproduce para su lectura y se
+ * almacena en el DocumentReference firmado.
+ *
+ * ⚠️ Texto orientativo redactado para un servicio de segunda opinión informativa.
+ * Debe ser revisado por el equipo legal/médico antes de producción.
  */
 
 export type ConsentBlock =
@@ -21,169 +24,96 @@ export interface ConsentSection {
 }
 
 export const consentTitle = 'Consentimiento Informado';
-export const consentSubtitle = 'Válido para todos los protocolos y terapias ofrecidos en SEGUNDA OPINIÓN MÉDICA';
+export const consentSubtitle = 'Servicio de Segunda Opinión Médica cardiovascular';
 
 export const consentSections: ConsentSection[] = [
   {
-    heading: '2. Descripción de los servicios',
+    heading: '2. Descripción del servicio',
     blocks: [
       {
         type: 'p',
-        text: 'SEGUNDA OPINIÓN MÉDICA es un centro de optimización biológica que ofrece protocolos orientados a la recuperación, el rendimiento y el bienestar integral. Los servicios incluidos en este consentimiento son:',
+        text: 'Segunda Opinión Médica es un servicio de segunda opinión médica cardiovascular dirigido por el Dr. Alejandro Barbagelata. Brinda una revisión experta de tu caso a partir de la información clínica y los estudios que vos aportás. El servicio incluye:',
       },
       {
         type: 'ul',
         items: [
-          'Oxigenoterapia Hiperbárica (HBOT): exposición a oxígeno comprimido en cámara monoplaza o multiplaza.',
-          'Entrenamiento Hipóxico-Hiperóxico Intermitente (IHHT): protocolos de alternancia entre aire hipóxico e hiperóxico para estimulación mitocondrial.',
-          'Fototerapia de luz roja / fotobiomodulación: exposición a longitudes de onda de luz roja e infrarroja cercana.',
-          'Terapia de contraste: sauna finlandesa (hasta 80 °C) seguida de inmersión en agua fría (4 °C).',
-          'Terapias biológicas: aplicación de sueros endovenosos, PRP, péptidos, exosomas y células madre (requieren evaluación previa del Director Médico).',
-          'Botas de compresión y recuperación: sistema neumático de compresión secuencial con crioterapia integrada.',
-          'Masajes deportivos y terapéuticos.',
-          'Yoga, meditación y mindfulness.',
-          'Barra de alimentación saludable.',
+          'Revisión de tu motivo de consulta, antecedentes, medicación y estudios aportados.',
+          'Estimación de tu riesgo cardiovascular (score PREVENT), con fines orientativos.',
+          'Elaboración de un informe de segunda opinión con apoyo de sistemas de inteligencia artificial, revisado y validado por un profesional médico.',
         ],
       },
       {
         type: 'p',
-        text: 'Cada sesión es supervisada por personal capacitado. Las terapias biológicas (ítem 5) requieren adicionalmente una evaluación médica previa con el Director Médico de SEGUNDA OPINIÓN MÉDICA.',
+        text: 'El servicio se presta de forma remota (no presencial) y sobre la base de la información que vos aportás.',
       },
     ],
   },
   {
-    heading: '3. Declaración de estado de salud',
+    heading: '3. Alcance y limitaciones',
     blocks: [
-      {
-        type: 'p',
-        text: 'Declaro que he informado verazmente a SEGUNDA OPINIÓN MÉDICA sobre mi estado de salud actual. En particular, declaro que:',
-      },
+      { type: 'p', text: 'Comprendo y acepto que:' },
       {
         type: 'ul',
         items: [
-          'No padezco ninguna de las contraindicaciones absolutas detalladas en la sección 4 de este documento.',
-          'He informado sobre todas las condiciones médicas, cirugías recientes, medicamentos que consumo (incluyendo suplementos y anticoagulantes) y alergias conocidas.',
-          'En caso de embarazo, lo he comunicado expresamente al staff de SEGUNDA OPINIÓN MÉDICA antes de iniciar cualquier protocolo.',
-          'No me encuentro bajo los efectos de alcohol, drogas ni medicamentos que alteren la conciencia o el equilibrio.',
-          'He consultado con mi médico tratante en caso de padecer enfermedades cardiovasculares, respiratorias, neurológicas, oncológicas o cualquier condición crónica relevante.',
-        ],
-      },
-      {
-        type: 'p',
-        text: 'Entiendo que la veracidad de esta declaración es mi responsabilidad y que la omisión de información puede generar riesgos para mi salud, eximiendo a SEGUNDA OPINIÓN MÉDICA y a su personal de responsabilidad ante dichos eventos.',
-      },
-    ],
-  },
-  {
-    heading: '4. Contraindicaciones absolutas y relativas',
-    blocks: [
-      {
-        type: 'p',
-        text: 'Las siguientes condiciones constituyen contraindicaciones absolutas para uno o más de los servicios de SEGUNDA OPINIÓN MÉDICA. Declaro no presentar ninguna de las siguientes sin haber informado al staff:',
-      },
-      { type: 'sub', text: 'Contraindicaciones absolutas (HBOT y cámara hiperbárica):' },
-      {
-        type: 'ul',
-        items: [
-          'Neumotórax no tratado.',
-          'Infección respiratoria alta aguda (resfríos, sinusitis, otitis).',
-          'Cirugía de oído, nariz o tórax en los últimos 30 días sin autorización médica.',
-          'Marcapasos o implantes electrónicos no certificados para uso hiperbárico.',
-          'Claustrofobia severa no controlada.',
-          'Convulsiones no controladas.',
-        ],
-      },
-      { type: 'sub', text: 'Contraindicaciones absolutas (IHHT):' },
-      {
-        type: 'ul',
-        items: [
-          'Insuficiencia cardíaca descompensada o infarto agudo reciente (menos de 6 meses).',
-          'Presión arterial no controlada (>180/110 mmHg).',
-          'Enfermedad pulmonar obstructiva severa (EPOC estadio IV).',
-          'Trombosis venosa profunda activa.',
-        ],
-      },
-      { type: 'sub', text: 'Contraindicaciones absolutas (terapia de contraste / sauna + cold plunge):' },
-      {
-        type: 'ul',
-        items: [
-          'Enfermedades cardiovasculares graves no estabilizadas.',
-          'Raynaud severo u otras alteraciones vasculares periféricas severas.',
-          'Epilepsia no controlada.',
-        ],
-      },
-      {
-        type: 'p',
-        text: 'Las condiciones relativas serán evaluadas caso a caso por el staff o el Director Médico. Ante cualquier duda, deberá realizarse una evaluación médica previa antes de iniciar el protocolo.',
-      },
-    ],
-  },
-  {
-    heading: '5. Riesgos y efectos adversos posibles',
-    blocks: [
-      {
-        type: 'p',
-        text: 'He sido informado/a de que los servicios de SEGUNDA OPINIÓN MÉDICA, si bien son seguros dentro de los protocolos establecidos, pueden presentar efectos adversos en algunos casos, entre ellos:',
-      },
-      {
-        type: 'ul',
-        items: [
-          'HBOT: molestia o dolor en oídos (barotrauma ótico) durante la presurización o despresurización; sensación de presión nasal; cansancio post-sesión.',
-          'IHHT: mareos, cefalea leve o fatiga transitoria durante los ciclos hipóxicos; palpitaciones.',
-          'Fototerapia: sensibilidad ocular si no se utilizan los protectores provistos; raramente, irritación cutánea en pieles muy sensibles.',
-          'Terapia de contraste: hipotermia leve, mareos o lipotimia si no se respetan los tiempos indicados; reacción vagal ante la inmersión en frío.',
-          'Botas de compresión: incomodidad por presión; contraindicadas ante trombosis activa no diagnosticada.',
-          'Terapias biológicas: reacciones locales en el sitio de aplicación, hematoma, infección; raramente, reacciones alérgicas sistémicas.',
-        ],
-      },
-      {
-        type: 'p',
-        text: 'Declaro haber recibido explicación suficiente sobre estos riesgos y acepto asumir voluntariamente dichas posibilidades dentro de los márgenes normales de la práctica.',
-      },
-    ],
-  },
-  {
-    heading: '6. Normas de conducta y seguridad',
-    blocks: [
-      { type: 'p', text: 'Me comprometo a cumplir las siguientes normas durante mi estadía en SEGUNDA OPINIÓN MÉDICA:' },
-      {
-        type: 'ul',
-        items: [
-          'Informar inmediatamente a cualquier operador del servicio si experimento malestar, dolor o síntomas inusuales durante una sesión.',
-          'No ingresar a la cámara hiperbárica con: relojes, celulares, encendedores, aerosoles, cosméticos, maquillaje, ropa sintética (nylon, lycra, poliéster), abrigos o calzado.',
-          'No ingresar a las instalaciones bajo efectos de alcohol o sustancias psicoactivas.',
-          'Respetar los tiempos de sesión indicados por el operador; no extender ni interrumpir los protocolos sin comunicarlo.',
-          'Hidratarme adecuadamente antes y después de cada sesión según las indicaciones del staff.',
-          'No utilizar los equipos de forma autónoma sin supervisión del personal de SEGUNDA OPINIÓN MÉDICA.',
-          'Consultar sobre mis prótesis o implantes antes de ingresar a cualquier dispositivo electromagnético.',
-          'En caso de menores de edad, el acompañante adulto responsable es quien firma este consentimiento y asume plena responsabilidad.',
+          'La segunda opinión tiene carácter informativo y orientativo; complementa pero NO reemplaza la consulta ni la relación con mi médico tratante.',
+          'No constituye una atención de urgencia. Ante una emergencia debo acudir al servicio de guardia más cercano o llamar a emergencias.',
+          'La calidad del informe depende de la veracidad y completitud de la información y los estudios que aporto.',
+          'El informe se elabora con apoyo de inteligencia artificial y es revisado por un profesional; no garantiza un diagnóstico definitivo ni un resultado clínico determinado.',
+          'La decisión final sobre cualquier conducta diagnóstica o terapéutica debe tomarse junto a mi médico tratante.',
         ],
       },
     ],
   },
   {
-    heading: '7. Privacidad y tratamiento de datos personales',
+    heading: '4. Uso de inteligencia artificial',
     blocks: [
       {
         type: 'p',
-        text: 'De conformidad con la Ley N° 25.326 de Protección de Datos Personales, SEGUNDA OPINIÓN MÉDICA (Shanti Om SRL) se compromete a:',
+        text: 'Para elaborar el informe, mi información clínica es procesada por sistemas de inteligencia artificial (proveedor: Anthropic) sobre infraestructura tecnológica de la plataforma.',
       },
       {
         type: 'ul',
         items: [
-          'Tratar los datos personales y de salud del cliente con carácter confidencial y únicamente para la gestión de sus servicios.',
-          'No ceder, vender ni compartir la información personal del cliente con terceros, salvo requerimiento judicial o autorización expresa.',
-          'Garantizar al titular el acceso, rectificación y supresión de sus datos mediante solicitud escrita a info@segundaopinion.org.',
+          'El procesamiento se realiza con el único fin de generar el informe de segunda opinión.',
+          'Un profesional médico revisa y valida el contenido antes de su entrega.',
+          'Consiento expresamente este procesamiento asistido por inteligencia artificial.',
         ],
-      },
-      {
-        type: 'p',
-        text: 'El cliente autoriza a SEGUNDA OPINIÓN MÉDICA a registrar y conservar los datos de salud provistos en este formulario en su legajo personal, con acceso restringido al Director Médico y al personal autorizado.',
       },
     ],
   },
   {
-    heading: '8. Declaración final y consentimiento',
+    heading: '5. Declaración de veracidad',
+    blocks: [
+      {
+        type: 'p',
+        text: 'Declaro que la información, los antecedentes y los estudios que aporto son completos y veraces. Entiendo que la omisión o inexactitud puede afectar la calidad de la segunda opinión, eximiendo a Segunda Opinión Médica y a sus profesionales de responsabilidad ante dichos eventos.',
+      },
+    ],
+  },
+  {
+    heading: '6. Privacidad y tratamiento de datos personales',
+    blocks: [
+      {
+        type: 'p',
+        text: 'De conformidad con la Ley N° 25.326 de Protección de Datos Personales, Segunda Opinión Médica se compromete a:',
+      },
+      {
+        type: 'ul',
+        items: [
+          'Tratar mis datos personales y de salud con carácter confidencial y únicamente para la prestación del servicio.',
+          'No ceder, vender ni compartir mi información con terceros, salvo los proveedores tecnológicos necesarios para prestar el servicio (servicios de nube e inteligencia artificial) bajo deber de confidencialidad, o ante requerimiento judicial.',
+          'Alojar la información en infraestructura de nube (AWS) con medidas de seguridad acordes.',
+          'Garantizar el acceso, la rectificación y la supresión de mis datos mediante solicitud a info@segundaopinionmedica.org.',
+        ],
+      },
+      {
+        type: 'p',
+        text: 'Autorizo a Segunda Opinión Médica a registrar y conservar la información provista en mi historia clínica digital, con acceso restringido a los profesionales autorizados.',
+      },
+    ],
+  },
+  {
+    heading: '7. Declaración final y consentimiento',
     blocks: [
       { type: 'p', text: 'Yo, el/la abajo firmante, declaro que:' },
       {
@@ -191,8 +121,8 @@ export const consentSections: ConsentSection[] = [
         items: [
           'He leído y comprendido completamente el contenido de este documento.',
           'He tenido la oportunidad de realizar preguntas y todas han sido respondidas satisfactoriamente.',
-          'Consiento libre y voluntariamente recibir los servicios de SEGUNDA OPINIÓN MÉDICA, habiendo sido informado/a de sus características, beneficios, riesgos y contraindicaciones.',
-          'La información declarada sobre mi estado de salud es completa y veraz.',
+          'Consiento libre y voluntariamente recibir el servicio de Segunda Opinión Médica, incluido el procesamiento de mi información con apoyo de inteligencia artificial, habiendo sido informado/a de sus características, alcance y limitaciones.',
+          'La información que aporto sobre mi estado de salud es completa y veraz.',
           'Entiendo que puedo revocar este consentimiento en cualquier momento, lo cual implicará la interrupción del servicio, sin afectar mis derechos como usuario.',
         ],
       },
@@ -201,4 +131,4 @@ export const consentSections: ConsentSection[] = [
 ];
 
 export const consentFooter =
-  'SEGUNDA OPINIÓN MÉDICA — Shanti Om SRL  |  Roque Sáenz Peña 530, San Isidro, Buenos Aires  |  info@segundaopinion.org';
+  'Segunda Opinión Médica · Dr. Alejandro Barbagelata  |  Húsares 2248 6° E, C1428 CABA (Bajo Belgrano), Argentina  |  info@segundaopinionmedica.org  ·  Powered by EPA Bienestar IA';
