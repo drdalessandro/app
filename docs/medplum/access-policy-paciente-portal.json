@@ -32,7 +32,7 @@
     { "resourceType": "Practitioner", "readonly": true },
     { "resourceType": "Organization", "readonly": true },
     { "resourceType": "Binary", "readonly": true },
-    { "resourceType": "Bot", "readonly": true, "criteria": "Bot?name=bw-solicitar-turno" },
+    { "resourceType": "Bot", "readonly": true, "criteria": "Bot?name=som-solicitar-turno" },
     { "resourceType": "Bot", "readonly": true, "criteria": "Bot?name=som-solicitar" }
   ]
 }
