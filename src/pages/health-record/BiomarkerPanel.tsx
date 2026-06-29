@@ -114,7 +114,7 @@ export function BiomarkerPanel(): JSX.Element {
   }, [medplum]);
 
   if (!panel) {
-    return <Navigate replace to="/health-record/biomarkers/endocrinologia" />;
+    return <Navigate replace to="/health-record/biomarkers/metabolico" />;
   }
 
   function observationsFor(code: string): Observation[] {

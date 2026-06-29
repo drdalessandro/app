@@ -147,7 +147,7 @@ export const biomarkerPanels: Record<string, BiomarkerPanelType> = {
         code: '2191-5',
         title: 'DHEA-S',
         unit: 'ug/dL',
-        description: 'Precursor hormonal suprarrenal asociado a vitalidad y longevidad.',
+        description: 'Precursor hormonal suprarrenal asociado a la salud hormonal y metabólica.',
         conventional: { low: 50, high: 450 },
         functional: { low: 350, high: 500 },
       },
@@ -182,7 +182,7 @@ export const biomarkerPanels: Record<string, BiomarkerPanelType> = {
     id: 'inflamatorios',
     title: 'Biomarcadores Inflamatorios',
     description:
-      'Marcadores de inflamación sistémica de bajo grado, asociados al riesgo cardiovascular, metabólico y de envejecimiento.',
+      'Marcadores de inflamación sistémica de bajo grado, asociados al riesgo cardiovascular y metabólico.',
     biomarkers: [
       {
         code: '30522-7',
@@ -255,7 +255,7 @@ export const biomarkerPanels: Record<string, BiomarkerPanelType> = {
   },
   metabolico: {
     id: 'metabolico',
-    title: 'Metabólico',
+    title: 'Cardiometabólico',
     description:
       'Marcadores de glucemia, resistencia a la insulina y perfil lipídico para evaluar la salud metabólica y el riesgo cardiovascular.',
     biomarkers: [
@@ -355,9 +355,9 @@ export const biomarkerPanels: Record<string, BiomarkerPanelType> = {
   },
   longevidad: {
     id: 'longevidad',
-    title: 'Longevidad / Micronutrientes',
+    title: 'Micronutrientes y prevención',
     description:
-      'Vitaminas, minerales y marcadores de envejecimiento clave para la energía, la inmunidad y la longevidad.',
+      'Vitaminas y minerales clave para la prevención cardiovascular, la energía y la inmunidad.',
     biomarkers: [
       {
         code: '1989-3',
@@ -413,36 +413,6 @@ export const biomarkerPanels: Record<string, BiomarkerPanelType> = {
         description: 'Estado de yodo, esencial para la función tiroidea.',
         conventional: { low: 100, high: 300 },
         functional: { low: 150, high: 300 },
-      },
-      {
-        code: 'dunedin-pace',
-        system: SOM_BIOMARKER_SYSTEM,
-        title: 'DunedinPACE (ritmo de envejecimiento)',
-        unit: 'ritmo/año',
-        description: 'Ritmo de envejecimiento biológico por metilación del ADN (1.0 = promedio).',
-        conventional: { high: 1.0 },
-        functional: { high: 0.8 },
-      },
-      {
-        code: 'edad-biologica',
-        system: SOM_BIOMARKER_SYSTEM,
-        title: 'Edad biológica (metilación ADN)',
-        unit: 'años',
-        description: 'Edad biológica estimada por relojes epigenéticos; ideal ≤ edad cronológica.',
-      },
-      {
-        code: 'telomeros',
-        system: SOM_BIOMARKER_SYSTEM,
-        title: 'Longitud telomérica',
-        unit: 'kb',
-        description: 'Largo de los telómeros; marcador de envejecimiento celular.',
-      },
-      {
-        code: 'nad',
-        system: SOM_BIOMARKER_SYSTEM,
-        title: 'NAD+ intracelular',
-        unit: 'uM',
-        description: 'Coenzima clave en la producción de energía celular; tiende a bajar con la edad.',
       },
     ],
   },
