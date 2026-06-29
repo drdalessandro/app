@@ -3,7 +3,7 @@
 //
 // Página PÚBLICA para fijar la contraseña desde el link de activación.
 // Recepción (app aparte) invita al paciente con `invite` y `sendEmail:false`, y genera
-// un link mágico https://app.segundaopinion.org/setpassword/:id/:secret que envía por
+// un link mágico https://app.segundaopinionmedica.org/setpassword/:id/:secret que envía por
 // WhatsApp / email / QR. Esta página resuelve ese link, fija la contraseña y manda al
 // paciente al login del portal.
 //

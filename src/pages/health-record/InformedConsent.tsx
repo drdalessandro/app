@@ -77,7 +77,7 @@ function buildConsentPlainText(
     `Firmado por: ${patientName}`,
     `DNI: ${dni}`,
     `Fecha y hora: ${timestamp}`,
-    'Lugar: San Isidro, Buenos Aires',
+    'Lugar: Ciudad Autónoma de Buenos Aires, Argentina',
     '',
     consentFooter
   );
@@ -202,7 +202,7 @@ export function InformedConsent(): JSX.Element {
           mb="lg"
         >
           Firmaste este consentimiento el {formatDateTime(signed.date)}. Si necesitás revocarlo, escribí a
-          info@segundaopinion.org. Podés volver a firmarlo si se actualiza el documento.
+          info@segundaopinionmedica.org. Podés volver a firmarlo si se actualiza el documento.
         </Alert>
       )}
 
