@@ -1,7 +1,7 @@
 # Configuración de Medplum (servidor)
 
 Recursos de configuración del servidor Medplum (`https://api.medplum.com.ar`,
-proyecto `7f068d7d-4633-46e9-9eff-d52bc03625b9`) que el portal necesita pero que
+proyecto canónico `7ce5e559-f315-4538-abf2-61fa4922f996` — "Segunda Opinión Médica") que el portal necesita pero que
 **no** viven en el código de la app. Se versionan acá como referencia y para
 compartirlos con la app clínica / recepción.
 
