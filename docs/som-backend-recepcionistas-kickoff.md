@@ -14,19 +14,21 @@ acá.
 
 ## Proyecto Medplum (definido)
 
-- **Proyecto canónico de SOM: `78ead38c-0f59-4576-b196-71685537588c` — "HeartInnovations".**
-  Tanto el backend (`recepcionistas`) como el portal (`app`) deben apuntar a este proyecto.
-- ⚠️ **Acción pendiente en `app`:** hoy `app/.env.defaults` apunta a `7f068d7d-…`
-  (proyecto "Segunda Opinión Médica", 221 recursos FHIR). Para que el flujo SOM funcione end-to-end,
-  el portal debe repuntarse a `78ead38c-…` (HeartInnovations) — front y back tienen que
-  compartir el mismo proyecto FHIR. Confirmar y actualizar `MEDPLUM_PROJECT_ID`,
-  `MEDPLUM_CLIENT_ID` y la AccessPolicy del paciente en ese proyecto.
+- **Proyecto canónico de SOM: `7ce5e559-f315-4538-abf2-61fa4922f996` — "Segunda Opinión Médica"
+  (221 recursos FHIR cargados y verificados).** Tanto el backend (`recepcionistas`) como el
+  portal (`app`) deben apuntar a este proyecto. El portal (`app/.env.defaults`) ya lo usa.
+- ⚠️ **Acción pendiente en el server:** aplicar/sincronizar la AccessPolicy del paciente
+  **en este proyecto** (`7ce5e559-…`) y confirmar que el `ClientApplication` `516dfb15-…` y
+  las `ProjectMembership` de los pacientes pertenecen a él. Si la policy quedó aplicada en
+  otro proyecto (`7f068d7d-…` o `78ead38c-…`), el paciente recibe `403` en todo lo readonly
+  (`ObservationDefinition`, `Questionnaire`, `Invoice`) — que es exactamente el síntoma visto
+  en producción.
 
 ## ⚠️ Systems FHIR canónicos renombrados (el seed DEBE coincidir)
 
 El portal (`app`) ya migró todos los `system`/`url` canónicos de `biowellness.ar` /
 `bio.medplum.com.ar` a **`segundaopinionmedica.org`**. El seed de `recepcionistas` y los
-recursos FHIR del server (proyecto HeartInnovations) **deben re-seedearse con estos mismos
+recursos FHIR del server (proyecto `7ce5e559-…` "Segunda Opinión Médica") **deben re-seedearse con estos mismos
 valores**, o el portal deja de matchear los datos:
 
 | Concepto | Nuevo valor canónico |
@@ -53,10 +55,9 @@ funciona.** NO crear módulos/bots/seeds nuevos en paralelo: **MODIFICAR lo exis
 Antes de cambiar nada: leer, entender el patrón, y reusar.
 
 ## PROYECTO MEDPLUM (definido)
-SOM corre sobre el proyecto **`78ead38c-0f59-4576-b196-71685537588c` ("HeartInnovations")**.
-`MEDPLUM_PROJECT_ID=78ead38c-0f59-4576-b196-71685537588c`. Seedear/deployar SIEMPRE contra
-este proyecto. El portal (`drdalessandro/app`) debe apuntar al mismo (hoy todavía usa
-`7f068d7d-…`: hay que alinearlo).
+SOM corre sobre el proyecto **`7ce5e559-f315-4538-abf2-61fa4922f996` ("Segunda Opinión Médica")**.
+`MEDPLUM_PROJECT_ID=7ce5e559-f315-4538-abf2-61fa4922f996`. Seedear/deployar SIEMPRE contra
+este proyecto. El portal (`drdalessandro/app`) ya apunta al mismo.
 
 ## CONTEXTO DEL CAMBIO
 `recepcionistas` nació para un centro de **salud funcional / longevidad** (terapias HBOT,

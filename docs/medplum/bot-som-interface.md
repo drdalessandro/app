@@ -2,7 +2,7 @@
 
 Los bots **no viven en este repo** (el portal): viven en el repo de bots
 (`recepcionistas`) y se despliegan en `api.medplum.com.ar`, proyecto
-`78ead38c-0f59-4576-b196-71685537588c` ("HeartInnovations"), que es el proyecto canónico
+`7ce5e559-f315-4538-abf2-61fa4922f996` ("Segunda Opinión Médica"), que es el proyecto canónico
 de SOM. Front y back comparten ese proyecto (ver
 `som-backend-recepcionistas-kickoff.md`). Este documento es el **contrato** que el portal
 espera, para que el backend lo implemente de forma compatible.
