@@ -71,7 +71,7 @@ Objetivo: cablear en el portal las **Sesiones** y **Pagos** del eje Cliente, y l
 5. Reglas que valida el bot (orden HBOT primero, capacidad/desfasaje, ventana, seña) — para reflejarlas en la UI.
 
 ### E. AccessPolicy
-- Confirmar que "Paciente — Portal" da `read` de los recursos de A/B acotado al paciente; si falta alguno, agregarlo a `docs/medplum/access-policy-paciente-portal.json`.
+- Confirmar que "Paciente SOM — Portal" da `read` de los recursos de A/B acotado al paciente; si falta alguno, agregarlo a `docs/medplum/access-policy-paciente-portal.json`.
 
 ## Puntos de integración en el portal
 

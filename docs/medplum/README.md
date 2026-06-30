@@ -46,9 +46,11 @@ resuelve, usar `%profile` (para un login de paciente es el mismo `Patient`).
 
 ### Cómo aplicarla
 
-1. En la app de Medplum, abrir `AccessPolicy/45ff9a4e-e1c6-48d8-aaae-1932aadf216c`,
-   pestaña **JSON**, pegar el contenido del archivo y guardar. (Por API:
-   `PUT /fhir/R4/AccessPolicy/45ff9a4e-e1c6-48d8-aaae-1932aadf216c`.)
+1. En la app de Medplum, abrir la AccessPolicy llamada **"Paciente SOM — Portal"**
+   (buscarla por `name`; su `id` es propio de cada proyecto, no hardcodear), pestaña
+   **JSON**, pegar el array `resource` del archivo y guardar. El nombre **debe** ser
+   exactamente "Paciente SOM — Portal": es el que referencian las `ProjectMembership`
+   de los pacientes y el que mantiene `recepcionistas` (`npm run seed`, upsert por nombre).
 2. **Project → Default Patient Access Policy** = "Paciente SOM — Portal" (para que los
    nuevos pacientes invitados la hereden).
 3. Para pacientes ya creados, confirmar que su `ProjectMembership.access.policy`
