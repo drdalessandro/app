@@ -108,9 +108,13 @@ export function BiomarkerPanel(): JSX.Element {
     loadData();
   }, [loadData]);
 
-  // Catálogo de biomarcadores publicado por el servidor (incluye rangos por sexo).
+  // Catálogo de biomarcadores publicado por el servidor (incluye rangos por sexo). Es
+  // enriquecimiento OPCIONAL: si no está disponible (403 por permisos, o el proyecto no lo
+  // publica), `items` cae al catálogo local — no hay que molestar al paciente con un error.
   useEffect(() => {
-    fetchServerBiomarkers(medplum).then(setServerBiomarkers).catch(showErrorNotification);
+    fetchServerBiomarkers(medplum)
+      .then(setServerBiomarkers)
+      .catch((err) => console.warn('Catálogo de biomarcadores del servidor no disponible; usando el local.', err));
   }, [medplum]);
 
   if (!panel) {

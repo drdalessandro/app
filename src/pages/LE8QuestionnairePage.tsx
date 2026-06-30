@@ -38,8 +38,11 @@ export function LE8QuestionnairePage(): JSX.Element {
       .searchOne('Questionnaire', { url: meta.url })
       .then((q) => setQuestionnaire(q ?? null))
       .catch((err) => {
+        // Si el cuestionario no está disponible (403 por permisos o aún no cargado en el
+        // server), `questionnaire = null` ya muestra el aviso "no disponible · pedile al
+        // equipo"; no hace falta un toast de error rojo encima.
         setQuestionnaire(null);
-        showErrorNotification(err);
+        console.warn('Cuestionario LE8 no disponible.', err);
       });
   }, [medplum, meta]);
 

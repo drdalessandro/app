@@ -7,7 +7,7 @@
       { "reference": "Project/7ce5e559-f315-4538-abf2-61fa4922f996" }
     ]
   },
-  "name": "Paciente — Portal",
+  "name": "Paciente SOM — Portal",
   "resource": [
     { "resourceType": "Patient", "criteria": "Patient?_id=%patient.id" },
     { "resourceType": "Observation", "criteria": "Observation?subject=%patient" },
