@@ -1,0 +1,290 @@
+{
+  "resourceType": "Questionnaire",
+  "url": "https://segundaopinionmedica.org/fhir/Questionnaire/le8-diet-mepa-v1",
+  "version": "1.0.0",
+  "status": "active",
+  "name": "le8-diet-mepa",
+  "title": "Alimentación (patrón mediterráneo, MEDAS)",
+  "subjectType": [
+    "Patient"
+  ],
+  "item": [
+    {
+      "linkId": "medas-intro",
+      "type": "display",
+      "text": "Estas 14 preguntas evalúan qué tan cercana es tu alimentación al patrón mediterráneo. Respondé según lo que comés habitualmente."
+    },
+    {
+      "linkId": "medas-01",
+      "text": "¿Usás el aceite de oliva como principal grasa para cocinar?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "1",
+            "display": "Sí"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "0",
+            "display": "No"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "medas-02",
+      "text": "¿Cuánto aceite de oliva consumís por día?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "1",
+            "display": "4 o más cucharadas"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "0",
+            "display": "Menos de 4 cucharadas"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "medas-03",
+      "text": "¿Cuántas porciones de verduras u hortalizas comés por día?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "1",
+            "display": "2 o más (al menos 1 cruda o en ensalada)"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "0",
+            "display": "Menos de 2"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "medas-04",
+      "text": "¿Cuántas piezas de fruta comés por día?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "1",
+            "display": "3 o más"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "0",
+            "display": "Menos de 3"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "medas-05",
+      "text": "¿Cuántas porciones de carnes rojas, hamburguesas o embutidos comés por día?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "1",
+            "display": "Menos de 1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "0",
+            "display": "1 o más"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "medas-06",
+      "text": "¿Cuántas porciones de manteca, margarina o crema consumís por día?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "1",
+            "display": "Menos de 1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "0",
+            "display": "1 o más"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "medas-07",
+      "text": "¿Cuántas bebidas azucaradas (gaseosas, jugos con azúcar) tomás por día?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "1",
+            "display": "Menos de 1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "0",
+            "display": "1 o más"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "medas-08",
+      "text": "¿Cuántas porciones de legumbres comés por semana?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "1",
+            "display": "3 o más"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "0",
+            "display": "Menos de 3"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "medas-09",
+      "text": "¿Cuántas porciones de pescado o mariscos comés por semana?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "1",
+            "display": "3 o más"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "0",
+            "display": "Menos de 3"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "medas-10",
+      "text": "¿Cuántas veces por semana comés repostería industrial (no casera: facturas, galletitas, tortas compradas)?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "1",
+            "display": "Menos de 3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "0",
+            "display": "3 o más"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "medas-11",
+      "text": "¿Cuántas veces por semana comés frutos secos?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "1",
+            "display": "3 o más"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "0",
+            "display": "Menos de 3"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "medas-12",
+      "text": "¿Preferís comer pollo, pavo o conejo en lugar de carne vacuna, cerdo o embutidos?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "1",
+            "display": "Sí"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "0",
+            "display": "No"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "medas-13",
+      "text": "¿Cuántas veces por semana comés verduras, pasta, arroz u otros platos preparados con salsa de tomate, cebolla y ajo (sofrito)?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "1",
+            "display": "2 o más"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "0",
+            "display": "Menos de 2"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "medas-14-vino-info",
+      "text": "¿Tomás vino? ¿Cuánto por semana? (dato informativo: no suma puntos; hablalo con tu médico)",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "no-toma",
+            "display": "No tomo vino"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "lt7",
+            "display": "Menos de 7 vasos por semana"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "gte7",
+            "display": "7 o más vasos por semana"
+          }
+        }
+      ]
+    }
+  ]
+}

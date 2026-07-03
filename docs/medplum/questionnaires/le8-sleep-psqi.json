@@ -1,0 +1,493 @@
+{
+  "resourceType": "Questionnaire",
+  "url": "https://segundaopinionmedica.org/fhir/Questionnaire/le8-sleep-psqi-v1",
+  "version": "1.0.0",
+  "status": "active",
+  "name": "le8-sleep-psqi",
+  "title": "Calidad del sueño (PSQI)",
+  "subjectType": [
+    "Patient"
+  ],
+  "item": [
+    {
+      "linkId": "psqi-intro",
+      "type": "display",
+      "text": "Las siguientes preguntas se refieren a tus hábitos de sueño durante el último mes. Respondé pensando en la mayoría de los días y noches del último mes."
+    },
+    {
+      "linkId": "psqi-q1",
+      "text": "¿A qué hora te acostaste habitualmente por la noche?",
+      "type": "time"
+    },
+    {
+      "linkId": "psqi-q2",
+      "text": "¿Cuántos minutos tardaste en dormirte, en general?",
+      "type": "integer"
+    },
+    {
+      "linkId": "psqi-q3",
+      "text": "¿A qué hora te levantaste habitualmente por la mañana?",
+      "type": "time"
+    },
+    {
+      "linkId": "psqi-q4",
+      "text": "¿Cuántas horas dormiste realmente por noche (puede diferir de las horas que estuviste en la cama)?",
+      "type": "decimal"
+    },
+    {
+      "linkId": "psqi-q5",
+      "text": "Durante el último mes, ¿con qué frecuencia tuviste problemas para dormir porque…",
+      "type": "group",
+      "item": [
+        {
+          "linkId": "psqi-q5a",
+          "text": "…no pudiste dormirte en los primeros 30 minutos?",
+          "type": "choice",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "0",
+                "display": "Ninguna vez en el último mes"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "1",
+                "display": "Menos de una vez a la semana"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "2",
+                "display": "Una o dos veces a la semana"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "3",
+                "display": "Tres o más veces a la semana"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "psqi-q5b",
+          "text": "…te despertaste durante la noche o de madrugada?",
+          "type": "choice",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "0",
+                "display": "Ninguna vez en el último mes"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "1",
+                "display": "Menos de una vez a la semana"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "2",
+                "display": "Una o dos veces a la semana"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "3",
+                "display": "Tres o más veces a la semana"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "psqi-q5c",
+          "text": "…tuviste que levantarte para ir al baño?",
+          "type": "choice",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "0",
+                "display": "Ninguna vez en el último mes"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "1",
+                "display": "Menos de una vez a la semana"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "2",
+                "display": "Una o dos veces a la semana"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "3",
+                "display": "Tres o más veces a la semana"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "psqi-q5d",
+          "text": "…no pudiste respirar cómodamente?",
+          "type": "choice",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "0",
+                "display": "Ninguna vez en el último mes"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "1",
+                "display": "Menos de una vez a la semana"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "2",
+                "display": "Una o dos veces a la semana"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "3",
+                "display": "Tres o más veces a la semana"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "psqi-q5e",
+          "text": "…tosiste o roncaste ruidosamente?",
+          "type": "choice",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "0",
+                "display": "Ninguna vez en el último mes"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "1",
+                "display": "Menos de una vez a la semana"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "2",
+                "display": "Una o dos veces a la semana"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "3",
+                "display": "Tres o más veces a la semana"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "psqi-q5f",
+          "text": "…sentiste demasiado frío?",
+          "type": "choice",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "0",
+                "display": "Ninguna vez en el último mes"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "1",
+                "display": "Menos de una vez a la semana"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "2",
+                "display": "Una o dos veces a la semana"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "3",
+                "display": "Tres o más veces a la semana"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "psqi-q5g",
+          "text": "…sentiste demasiado calor?",
+          "type": "choice",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "0",
+                "display": "Ninguna vez en el último mes"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "1",
+                "display": "Menos de una vez a la semana"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "2",
+                "display": "Una o dos veces a la semana"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "3",
+                "display": "Tres o más veces a la semana"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "psqi-q5h",
+          "text": "…tuviste malos sueños o pesadillas?",
+          "type": "choice",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "0",
+                "display": "Ninguna vez en el último mes"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "1",
+                "display": "Menos de una vez a la semana"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "2",
+                "display": "Una o dos veces a la semana"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "3",
+                "display": "Tres o más veces a la semana"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "psqi-q5i",
+          "text": "…tuviste dolor?",
+          "type": "choice",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "0",
+                "display": "Ninguna vez en el último mes"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "1",
+                "display": "Menos de una vez a la semana"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "2",
+                "display": "Una o dos veces a la semana"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "3",
+                "display": "Tres o más veces a la semana"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "psqi-q5j",
+          "text": "…otra razón?",
+          "type": "choice",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "0",
+                "display": "Ninguna vez en el último mes"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "1",
+                "display": "Menos de una vez a la semana"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "2",
+                "display": "Una o dos veces a la semana"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "3",
+                "display": "Tres o más veces a la semana"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "psqi-q5j-detalle",
+          "text": "Si hubo otra razón, describila",
+          "type": "string",
+          "enableWhen": [
+            {
+              "question": "psqi-q5j",
+              "operator": "!=",
+              "answerCoding": {
+                "code": "0"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "psqi-q6",
+      "text": "Durante el último mes, ¿cómo calificarías la calidad general de tu sueño?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "0",
+            "display": "Muy buena"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "1",
+            "display": "Bastante buena"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "2",
+            "display": "Bastante mala"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "3",
+            "display": "Muy mala"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "psqi-q7",
+      "text": "Durante el último mes, ¿con qué frecuencia tomaste medicación (recetada o de venta libre) para dormir?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "0",
+            "display": "Ninguna vez en el último mes"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "1",
+            "display": "Menos de una vez a la semana"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "2",
+            "display": "Una o dos veces a la semana"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "3",
+            "display": "Tres o más veces a la semana"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "psqi-q8",
+      "text": "Durante el último mes, ¿con qué frecuencia te costó mantenerte despierto/a (manejando, comiendo o en actividades sociales)?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "0",
+            "display": "Ninguna vez en el último mes"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "1",
+            "display": "Menos de una vez a la semana"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "2",
+            "display": "Una o dos veces a la semana"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "3",
+            "display": "Tres o más veces a la semana"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "psqi-q9",
+      "text": "Durante el último mes, ¿cuánto problema representó mantener el entusiasmo para hacer las cosas?",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "0",
+            "display": "Ningún problema"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "1",
+            "display": "Un problema muy leve"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "2",
+            "display": "Algo de problema"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "3",
+            "display": "Un gran problema"
+          }
+        }
+      ]
+    }
+  ]
+}
