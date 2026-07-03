@@ -106,8 +106,9 @@ Cómo quedó:
 
 > Para activarlo en el server: `npm run deploy:bots` (deploya `som-solicitar-turno`),
 > `npm run seed` (AccessPolicy) y el Project Secret `RECEPCION_WHATSAPP_TO`.
-> Endurecimiento opcional: crear el bot con `runAsUser` para que `requester` no se
-> pueda falsificar (mientras tanto, Recepción verifica al confirmar).
+> ⚠️ `runAsUser` debe quedar DESACTIVADO: con la policy del paciente (Task de
+> solo-lectura) la creación del Task daría Forbidden. El bot escribe con su propia
+> identidad y Recepción verifica al confirmar.
 
 Futuro (si se quisiera **reserva inmediata** por bots): endurecer
 `bw-reservar-turno`/`bw-reservar-combo` para derivar el paciente del login (no del
