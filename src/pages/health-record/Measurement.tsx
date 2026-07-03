@@ -98,8 +98,8 @@ export function Measurement(): JSX.Element {
         code: {
           coding: [
             {
-              code: '8462-4',
-              display: 'Diastolic Blood Pressure',
+              code: item.code,
+              display: item.label,
               system: 'http://loinc.org',
             },
           ],

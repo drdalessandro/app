@@ -44,18 +44,18 @@ export const measurementsMeta: Record<string, ObservationType> = {
       'La presión arterial es la fuerza que ejerce la sangre sobre las paredes de tus vasos sanguíneos. Cuando es alta, puede dañarlos y aumentar el riesgo de infarto o ACV. La medimos periódicamente para controlar que no se mantenga elevada. La hipertensión es la condición de tener la presión arterial alta de forma sostenida.',
     chartDatasets: [
       {
-        label: 'Diastólica',
-        code: '8462-4',
-        unit: 'mm[Hg]',
-        backgroundColor: secondBackgroundColor,
-        borderColor: secondBorderColor,
-      },
-      {
         label: 'Sistólica',
         code: '8480-6',
         unit: 'mm[Hg]',
         backgroundColor,
         borderColor,
+      },
+      {
+        label: 'Diastólica',
+        code: '8462-4',
+        unit: 'mm[Hg]',
+        backgroundColor: secondBackgroundColor,
+        borderColor: secondBorderColor,
       },
     ],
   },
