@@ -163,8 +163,11 @@ function medas(
 }
 
 /**
- * Alimentación — MEDAS / MEPA (14 ítems, PREDIMED). Cada `code:'1'` suma 1 → 0–14.
- * ≥9 = buena adherencia al patrón mediterráneo. LE8 mapea la adherencia a su score de dieta.
+ * Alimentación — MEDAS / MEPA (PREDIMED). PUNTÚAN los ítems 1–13: cada `code:'1'` suma
+ * 1 → 0–13. El ítem 14 (vino) del MEDAS original se incluye solo como INFORMATIVO
+ * (decisión clínica de SOM: no promover alcohol en prevención cardiovascular): sus
+ * códigos no son '1'/'0' y el dashboard NO debe sumarlo. LE8 mapea la adherencia
+ * (proporción de criterios cumplidos sobre 13) a su score de dieta.
  */
 const dietMepa: Questionnaire = {
   resourceType: 'Questionnaire',
@@ -193,7 +196,17 @@ const dietMepa: Questionnaire = {
     medas('medas-11', '¿Cuántas veces por semana comés frutos secos?', '3 o más', 'Menos de 3'),
     medas('medas-12', '¿Preferís comer pollo, pavo o conejo en lugar de carne vacuna, cerdo o embutidos?', 'Sí', 'No'),
     medas('medas-13', '¿Cuántas veces por semana comés verduras, pasta, arroz u otros platos preparados con salsa de tomate, cebolla y ajo (sofrito)?', '2 o más', 'Menos de 2'),
-    medas('medas-14', '¿Tomás vino? (si corresponde a tu situación de salud) ¿Cuánto?', '7 o más vasos por semana', 'Menos de 7 vasos por semana'),
+    // Ítem 14 del MEDAS original (vino): solo informativo, NO suma puntos (códigos ≠ '1'/'0').
+    {
+      linkId: 'medas-14-vino-info',
+      text: '¿Tomás vino? ¿Cuánto por semana? (dato informativo: no suma puntos; hablalo con tu médico)',
+      type: 'choice',
+      answerOption: [
+        { valueCoding: { code: 'no-toma', display: 'No tomo vino' } },
+        { valueCoding: { code: 'lt7', display: 'Menos de 7 vasos por semana' } },
+        { valueCoding: { code: 'gte7', display: '7 o más vasos por semana' } },
+      ],
+    },
   ],
 };
 
