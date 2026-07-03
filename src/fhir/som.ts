@@ -169,7 +169,9 @@ export async function crearSolicitudSOM(
   datos: NuevaSolicitudSOM,
   archivos: ArchivoSOM[]
 ): Promise<ResultadoSOM> {
-  const bot = await medplum.searchOne('Bot', `name=${BOT_SOM_SOLICITAR}`);
+  // `name:exact`: la búsqueda FHIR por `name=` es POR PREFIJO ("som-solicitar" también
+  // matchea "som-solicitar-turno") y ejecutaríamos el bot equivocado.
+  const bot = await medplum.searchOne('Bot', `name:exact=${BOT_SOM_SOLICITAR}`);
   if (!bot?.id) {
     return {
       ok: false,

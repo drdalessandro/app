@@ -57,7 +57,8 @@ export async function crearSolicitud(
   patient: Patient,
   s: NuevaSolicitud
 ): Promise<ResultadoSolicitud> {
-  const bot = await medplum.searchOne('Bot', `name=${BOT_SOLICITAR}`);
+  // `name:exact`: la búsqueda por `name=` es por prefijo; exigimos el bot exacto.
+  const bot = await medplum.searchOne('Bot', `name:exact=${BOT_SOLICITAR}`);
   if (!bot?.id) {
     return {
       ok: false,
