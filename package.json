@@ -8,6 +8,7 @@
     "dev": "vite",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix src",
     "preview": "vite preview",
+    "upload-le8": "tsx scripts/upload-le8.ts",
     "test": "vitest run",
     "test:watch": "vitest watch"
   },
@@ -35,6 +36,7 @@
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "6.0.2",
     "chart.js": "4.5.1",
+    "dotenv": "16.6.1",
     "fast-json-patch": "3.1.1",
     "postcss": "8.5.15",
     "postcss-preset-mantine": "1.18.0",
@@ -42,6 +44,7 @@
     "react-chartjs-2": "5.3.1",
     "react-dom": "19.2.7",
     "react-router": "7.17.0",
+    "tsx": "4.20.6",
     "typescript": "6.0.3",
     "vite": "8.0.16",
     "vitest": "4.1.8"
