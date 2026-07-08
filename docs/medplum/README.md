@@ -20,7 +20,9 @@ debería estar como `defaultPatientAccessPolicy` del proyecto).
 
 Cubre todo lo que el portal lee/escribe:
 
-- **Compartimento del paciente** — **escritura** (autogestión): `Patient` (perfil),
+- **Compartimento del paciente** — **escritura** (autogestión): `Patient` (perfil, y la
+  extensión `onboarding-completed` del Patient Journey; el origen `patient-origin` lo
+  setea el backend al invitar),
   `Observation` (biomarcadores y signos vitales), `QuestionnaireResponse`,
   `DocumentReference` (consentimiento), `Communication` (mensajes).
 - **Compartimento del paciente** — **solo lectura**: `Appointment`, `Coverage`,

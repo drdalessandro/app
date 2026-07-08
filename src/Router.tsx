@@ -33,11 +33,14 @@ import { ScreeningQuestionnairePage } from './pages/ScreeningQuestionnairePage';
 import { MiSegundaOpinion } from './pages/MiSegundaOpinion';
 import { SignOutPage } from './pages/SignOutPage';
 import { SolicitarSOM } from './pages/SolicitarSOM';
+import { Welcome } from './pages/Welcome';
 
 export function Router(): JSX.Element {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      {/* Patient Journey: Bienvenida (auto-registrado) / Onboarding (invitado). */}
+      <Route path="bienvenida" element={<Welcome />} />
       <Route path="Communication" element={<MessagesPage />}>
         <Route path=":messageId" element={<MessagesPage />} />
       </Route>
