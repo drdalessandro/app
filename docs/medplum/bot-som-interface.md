@@ -52,8 +52,10 @@ Una `ServiceRequest` (status `active`, intent `order`) con:
 - `extension[]`: `{ url: SOM_ORIGIN_EXT, valueCode: origin }`
 - `performer`: el `Practitioner` del Dr. Barbagelata (si está disponible)
 
-Recomendado endurecer con `runAsUser` para que el `requester` no se pueda falsificar
-(igual que la nota de seguridad de `som-solicitar-turno`).
+> ⚠️ **`runAsUser` debe quedar DESACTIVADO.** Con `runAsUser` el bot corre con la
+> AccessPolicy del paciente (que tiene `ServiceRequest` en solo-lectura) y la creación
+> da `Forbidden` (verificado en producción). El bot corre con su propia identidad —
+> modelo de solicitud: el paciente no escribe, el bot escribe por él.
 
 ### Output (lo que el portal espera, `ResultadoSOM`)
 

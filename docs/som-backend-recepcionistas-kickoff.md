@@ -80,7 +80,8 @@ y unos permisos. El contrato completo está en el repo `app`:
    - Crea una `ServiceRequest` (status `active`, `code` system
      `https://segundaopinionmedica.org/fhir/CodeSystem/som-services` / `som-cardiology`),
      con `reasonCode.text = motivo`, `supportingInfo` = QR + docs, extensión
-     `…/som-origin = origin`. Endurecer con `runAsUser`.
+     `…/som-origin = origin`. ⚠️ `runAsUser` DESACTIVADO (con la policy del paciente
+     la creación daría Forbidden; el bot escribe con su propia identidad).
    - Output: `{ ok, mensaje?, serviceRequestId? }`.
    - PATRÓN A SEGUIR: la misma mecánica del bot de turnos `som-solicitar-turno` (ver §
      "Turnos rebrandeados" abajo).
