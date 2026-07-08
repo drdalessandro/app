@@ -123,6 +123,20 @@ por los servicios cardiovasculares de SOM, tomados del menú de segundaopinionme
 - Historia Clínica · Contenidos
 NO inventar precios ni reglas: tomarlos del sitio / del usuario.
 
+## PATIENT JOURNEY (el portal ya lo implementó; el backend debe setear el origen)
+
+El portal muestra una pantalla de primera vez que ramifica según el origen del paciente:
+**Bienvenida** (auto-registrado) u **Onboarding** (invitado). El backend debe **setear al
+invitar** la extensión en el `Patient`:
+
+- URL: `https://segundaopinionmedica.org/fhir/StructureDefinition/patient-origin`
+- `valueCode`: `reception` (invitación de Recepción) | `referral` (derivación de colega)
+- Ausente ⇒ el portal lo trata como auto-registrado.
+
+El portal escribe (no tocar desde el backend):
+`…/StructureDefinition/onboarding-completed` (`valueDateTime`) cuando el paciente
+completa el journey.
+
 ## TURNOS REBRANDEADOS (el portal ya cambió; el backend debe alinear)
 
 El portal migró el flujo de "Pedir un turno" de terapias funcionales a servicios
