@@ -37,6 +37,7 @@ import {
 import type { Icon } from '@tabler/icons-react';
 import type { JSX } from 'react';
 import { useNavigate } from 'react-router';
+import { PlanBienestar100 } from '../components/PlanBienestar100';
 import classes from './HomePage.module.css';
 
 // Tablero mobile: la card CTA lleva a Pedir Segunda Opinión; las acciones rápidas y las
@@ -189,6 +190,11 @@ export function HomePage(): JSX.Element {
           </Button>
         </Card>
 
+        {/* Plan Bienestar · 100 días (solo si el paciente está inscripto) */}
+        <Box mb="lg">
+          <PlanBienestar100 />
+        </Box>
+
         {/* Acciones rápidas */}
         <SimpleGrid cols={3} spacing="sm" mb="lg">
           {mobileTiles.map((t) => (
@@ -256,6 +262,11 @@ export function HomePage(): JSX.Element {
           </Group>
         </Container>
       </div>
+
+      {/* Plan Bienestar · 100 días (solo si el paciente está inscripto) */}
+      <Container pt={48}>
+        <PlanBienestar100 />
+      </Container>
 
       {/* Accesos rápidos */}
       <Container py={48}>

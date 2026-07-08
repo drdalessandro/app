@@ -137,6 +137,23 @@ El portal escribe (no tocar desde el backend):
 `…/StructureDefinition/onboarding-completed` (`valueDateTime`) cuando el paciente
 completa el journey.
 
+## PLAN BIENESTAR 100 DÍAS (gamificación; el backend crea el CarePlan al inscribir)
+
+El portal muestra una tarjeta de progreso (día X/100, hitos, racha semanal) calculada
+client-side. Detecta la inscripción así (en orden):
+
+1. **`CarePlan`** del paciente (contrato preferido) — crearlo al inscribir:
+   - `status: active`, `subject`: el paciente,
+   - `category` coding: `https://segundaopinionmedica.org/fhir/CodeSystem/care-plans`
+     / código **`plan-bienestar-100`**,
+   - `period.start` = día 1, `period.end` = start + 100 días.
+2. *Fallback*: `Coverage` activo cuyo `plan-codigo` contenga `BIENESTAR`, con
+   `period.start` cargado.
+
+Los hitos y la racha se calculan desde los recursos que el paciente ya genera
+(DocumentReference de consentimiento, Observations, QuestionnaireResponses LE8,
+ServiceRequest SOM) — el backend no tiene que escribir nada más para el MVP.
+
 ## TURNOS REBRANDEADOS (el portal ya cambió; el backend debe alinear)
 
 El portal migró el flujo de "Pedir un turno" de terapias funcionales a servicios
