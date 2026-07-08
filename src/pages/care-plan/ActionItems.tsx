@@ -9,6 +9,7 @@ import type { JSX } from 'react';
 import { useNavigate } from 'react-router';
 import { InfoButton } from '../../components/InfoButton';
 import { InfoSection } from '../../components/InfoSection';
+import { PlanBienestar100 } from '../../components/PlanBienestar100';
 
 export function ActionItems(): JSX.Element {
   const theme = useMantineTheme();
@@ -20,6 +21,10 @@ export function ActionItems(): JSX.Element {
   return (
     <Box p="xl">
       <Title mb="lg">Pasos del plan</Title>
+      {/* Plan Bienestar · 100 días: progreso si está inscripto, invitación si no. */}
+      <Box mb="lg">
+        <PlanBienestar100 invitar />
+      </Box>
       <InfoSection title="Pasos del plan">
         <Stack gap={0}>
           {carePlans.map((resource) => (
