@@ -36,6 +36,7 @@ import {
 } from '@tabler/icons-react';
 import type { Icon } from '@tabler/icons-react';
 import type { JSX } from 'react';
+import { PlanBienestarCard } from '@epa/plan-bienestar-react';
 import { useNavigate } from 'react-router';
 import { PlanBienestar100 } from '../components/PlanBienestar100';
 import classes from './HomePage.module.css';
@@ -194,6 +195,10 @@ export function HomePage(): JSX.Element {
         <Box mb="lg">
           <PlanBienestar100 />
         </Box>
+        {/* Plan cardiovascular en menopausia (módulo drop-in; null si no es elegible) */}
+        <Box mb="lg">
+          <PlanBienestarCard />
+        </Box>
 
         {/* Acciones rápidas */}
         <SimpleGrid cols={3} spacing="sm" mb="lg">
@@ -266,6 +271,10 @@ export function HomePage(): JSX.Element {
       {/* Plan Bienestar · 100 días (solo si el paciente está inscripto) */}
       <Container pt={48}>
         <PlanBienestar100 />
+      </Container>
+      {/* Plan cardiovascular en menopausia (módulo drop-in; null si no es elegible) */}
+      <Container pt={24}>
+        <PlanBienestarCard />
       </Container>
 
       {/* Accesos rápidos */}
