@@ -16,7 +16,7 @@ import type { JSX } from 'react';
 import { useParams } from 'react-router';
 import { Loading } from '../components/Loading';
 import { showErrorNotification } from '../utils/notifications';
-import { fixQuestionnaireResponseTimes } from '../utils/questionnaire';
+import { fixQuestionnaireResponseTimes, relaxRequiredBooleans } from '../utils/questionnaire';
 import { le8QuestionnaireBySlug } from '../le8';
 
 export function LE8QuestionnairePage(): JSX.Element {
@@ -39,7 +39,7 @@ export function LE8QuestionnairePage(): JSX.Element {
     setQuestionnaire(undefined);
     medplum
       .searchOne('Questionnaire', { url: meta.url })
-      .then((q) => setQuestionnaire(q ?? null))
+      .then((q) => setQuestionnaire(q ? relaxRequiredBooleans(q) : null))
       .catch((err) => {
         setQuestionnaire(null);
         showErrorNotification(err);
