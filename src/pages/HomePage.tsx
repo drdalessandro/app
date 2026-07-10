@@ -37,7 +37,7 @@ import type { Icon } from '@tabler/icons-react';
 import type { JSX } from 'react';
 import { useNavigate } from 'react-router';
 import classes from './HomePage.module.css';
-import { PlanBienestarCard } from '@epa/plan-bienestar-react';
+import { EstadioCkmCard, PlanBienestarCard } from '@epa/plan-bienestar-react';
 
 // Tablero mobile: 3 acciones rápidas + filas compactas a las secciones.
 const mobileTiles: { icon: Icon; title: string; href: string }[] = [
@@ -190,6 +190,9 @@ export function HomePage(): JSX.Element {
         </Card>
         <Container mt="md">
           <PlanBienestarCard />
+          <Box mt="md">
+            <EstadioCkmCard />
+          </Box>
         </Container>
 
         {/* Acciones rápidas */}
@@ -265,6 +268,9 @@ export function HomePage(): JSX.Element {
         {/* Plan Bienestar · 100 días: la card se auto-gestiona (null si el paciente no es elegible). */}
         <Box mb="xl">
           <PlanBienestarCard />
+          <Box mt="md">
+            <EstadioCkmCard />
+          </Box>
         </Box>
         <Title order={2} mb="lg">
           Accesos rápidos
