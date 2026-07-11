@@ -88,19 +88,30 @@ export function usePlanBienestar(options: UsePlanBienestarOptions = {}): PlanBie
         return;
       }
 
+      // Las metas se leen con UNA búsqueda por _id (no con GETs individuales): una
+      // búsqueda devuelve 200 con lo que la AccessPolicy permite ver, así que una meta
+      // no legible no rechaza la carga NI deja errores 404 en la consola del navegador.
+      const idsMetas = (plan.goal ?? [])
+        .map((referencia) => referencia.reference)
+        .filter((ref): ref is string => Boolean(ref?.startsWith('Goal/')))
+        .map((ref) => ref.slice('Goal/'.length));
       const [tareas, objetivos] = await Promise.all([
         medplum.searchResources('Task', { 'based-on': getReferenceString(plan) }),
-        Promise.all(
-          (plan.goal ?? [])
-            .filter((referencia) => referencia.reference)
-            .map((referencia) => medplum.readReference(referencia as { reference: string })),
-        ),
+        idsMetas.length
+          ? medplum.searchResources('Goal', { _id: idsMetas.join(',') }).catch(() => [] as Goal[])
+          : Promise.resolve([] as Goal[]),
       ]);
       if (cancelado) return;
 
+      if (objetivos.length < idsMetas.length) {
+        console.warn(
+          `Plan Bienestar: ${idsMetas.length - objetivos.length} meta(s) del plan no visibles para el paciente (revisar Goal en la AccessPolicy del proyecto activo).`,
+        );
+      }
+
       setCarePlan(plan);
       setPasos(tareas);
-      setMetas(objetivos as Goal[]);
+      setMetas(objetivos);
       setCargando(false);
     })().catch(() => {
       if (!cancelado) setCargando(false);
