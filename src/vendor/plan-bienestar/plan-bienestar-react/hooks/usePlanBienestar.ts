@@ -88,9 +88,12 @@ export function usePlanBienestar(options: UsePlanBienestarOptions = {}): PlanBie
         return;
       }
 
-      const [tareas, objetivos] = await Promise.all([
+      // Las metas se cargan con tolerancia: si una referencia no resuelve (p.ej. la
+      // AccessPolicy del paciente no permite leer Goal → 404), el plan y sus pasos se
+      // muestran igual con las metas legibles.
+      const [tareas, resultadosMetas] = await Promise.all([
         medplum.searchResources('Task', { 'based-on': getReferenceString(plan) }),
-        Promise.all(
+        Promise.allSettled(
           (plan.goal ?? [])
             .filter((referencia) => referencia.reference)
             .map((referencia) => medplum.readReference(referencia as { reference: string })),
@@ -98,9 +101,19 @@ export function usePlanBienestar(options: UsePlanBienestarOptions = {}): PlanBie
       ]);
       if (cancelado) return;
 
+      const objetivos = resultadosMetas
+        .filter((r) => r.status === 'fulfilled')
+        .map((r) => (r as PromiseFulfilledResult<Goal>).value);
+      const fallidas = resultadosMetas.length - objetivos.length;
+      if (fallidas > 0) {
+        console.warn(
+          `Plan Bienestar: ${fallidas} meta(s) del plan no se pudieron leer (revisar Goal en la AccessPolicy del paciente).`,
+        );
+      }
+
       setCarePlan(plan);
       setPasos(tareas);
-      setMetas(objetivos as Goal[]);
+      setMetas(objetivos);
       setCargando(false);
     })().catch(() => {
       if (!cancelado) setCargando(false);

@@ -27,8 +27,14 @@ Cubre todo lo que el portal lee/escribe:
   `DocumentReference` (consentimiento), `Communication` (mensajes).
 - **Compartimento del paciente** — **solo lectura**: `Appointment`, `Coverage`,
   `Invoice` (pagos/señas), `DiagnosticReport`, `ServiceRequest` (sus solicitudes de
-  Segunda Opinión), `RiskAssessment` (score PREVENT), `CarePlan`, `MedicationRequest`,
-  `Immunization`, `Task` (sus solicitudes de turno). La agenda y los planes/pagos
+  Segunda Opinión), `RiskAssessment` (score PREVENT), `CarePlan`, `Goal` (las metas del
+  Plan Bienestar; sin esta entrada el portal recibe 404 al leerlas), `MedicationRequest`,
+  `Immunization`, `Task` (sus solicitudes de turno).
+  > ⚠️ Decisión pendiente (Plan Bienestar drop-in): si el paciente debe poder INICIAR el
+  > plan él mismo (`empezarPlan` crea CarePlan+Goal+Task+CareTeam+Condition por
+  > transacción) y tildar pasos (`completarPaso` actualiza Task), esos recursos necesitan
+  > **escritura** acotada a `%patient`; si se mantiene el modelo "solicitud" (lo crea el
+  > equipo/bot), alcanza con esta lectura. La agenda y los planes/pagos
   los gestiona Recepción; reservar es por *modelo de solicitud*, así que el paciente
   no escribe `Appointment`. La **Segunda Opinión** también es por *modelo de solicitud*:
   el paciente escribe su `QuestionnaireResponse` + `DocumentReference` y ejecuta el bot
