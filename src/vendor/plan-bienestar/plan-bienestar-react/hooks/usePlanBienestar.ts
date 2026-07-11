@@ -88,26 +88,24 @@ export function usePlanBienestar(options: UsePlanBienestarOptions = {}): PlanBie
         return;
       }
 
-      // Las metas se cargan con tolerancia: si una referencia no resuelve (p.ej. la
-      // AccessPolicy del paciente no permite leer Goal → 404), el plan y sus pasos se
-      // muestran igual con las metas legibles.
-      const [tareas, resultadosMetas] = await Promise.all([
+      // Las metas se leen con UNA búsqueda por _id (no con GETs individuales): una
+      // búsqueda devuelve 200 con lo que la AccessPolicy permite ver, así que una meta
+      // no legible no rechaza la carga NI deja errores 404 en la consola del navegador.
+      const idsMetas = (plan.goal ?? [])
+        .map((referencia) => referencia.reference)
+        .filter((ref): ref is string => Boolean(ref?.startsWith('Goal/')))
+        .map((ref) => ref.slice('Goal/'.length));
+      const [tareas, objetivos] = await Promise.all([
         medplum.searchResources('Task', { 'based-on': getReferenceString(plan) }),
-        Promise.allSettled(
-          (plan.goal ?? [])
-            .filter((referencia) => referencia.reference)
-            .map((referencia) => medplum.readReference(referencia as { reference: string })),
-        ),
+        idsMetas.length
+          ? medplum.searchResources('Goal', { _id: idsMetas.join(',') }).catch(() => [] as Goal[])
+          : Promise.resolve([] as Goal[]),
       ]);
       if (cancelado) return;
 
-      const objetivos = resultadosMetas
-        .filter((r) => r.status === 'fulfilled')
-        .map((r) => (r as PromiseFulfilledResult<Goal>).value);
-      const fallidas = resultadosMetas.length - objetivos.length;
-      if (fallidas > 0) {
+      if (objetivos.length < idsMetas.length) {
         console.warn(
-          `Plan Bienestar: ${fallidas} meta(s) del plan no se pudieron leer (revisar Goal en la AccessPolicy del paciente).`,
+          `Plan Bienestar: ${idsMetas.length - objetivos.length} meta(s) del plan no visibles para el paciente (revisar Goal en la AccessPolicy del proyecto activo).`,
         );
       }
 
