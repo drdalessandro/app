@@ -65,6 +65,13 @@ Cubre todo lo que el portal lee/escribe:
 `%patient` lo resuelve Medplum al `Patient` del login. Si en tu server no
 resuelve, usar `%profile` (para un login de paciente es el mismo `Patient`).
 
+> ⚠️ **Aplicarla en el proyecto correcto**: el proyecto activo del portal es
+> **`7ce5e559-f315-4538-abf2-61fa4922f996`** (el del `.env`). Existe una copia de la
+> policy en el proyecto `7f068d7d-…` (id `13e6a16e-…`) que NO gobierna a los pacientes
+> del portal — editarla ahí no tiene efecto (fue la causa de que el 404 de `Goal`
+> persistiera). Buscar la AccessPolicy "Paciente SOM — Portal" **dentro de `7ce5e559`**
+> y pegar ahí el array `resource`.
+
 ### Cómo aplicarla
 
 1. En la app de Medplum, abrir la AccessPolicy llamada **"Paciente SOM — Portal"**
