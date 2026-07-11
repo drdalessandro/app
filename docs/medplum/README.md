@@ -25,16 +25,27 @@ Cubre todo lo que el portal lee/escribe:
   setea el backend al invitar),
   `Observation` (biomarcadores y signos vitales), `QuestionnaireResponse`,
   `DocumentReference` (consentimiento), `Communication` (mensajes).
+- **Plan Bienestar (drop-in)** — el paciente INICIA su propio plan (`empezarPlan` crea
+  CarePlan+Goal+Task+CareTeam+Condition por transacción) y tilda pasos (`completarPaso`
+  actualiza Task). La escritura está acotada con criterios finos para no abrir el resto:
+  - `CarePlan`: lectura general + **escritura SOLO** de planes que instancien la
+    `PlanDefinition` del plan (`instantiates-canonical=…/menopausia-cardiovascular`).
+    Al sumar nuevos planes (p.ej. 100 días genérico), agregar su canonical acá.
+  - `Goal`: lectura/escritura de sus propias metas (`Goal?patient=%patient`). Sin esta
+    entrada el portal recibe **404** al leer las metas (Medplum oculta lo no permitido).
+  - `Task`: lectura general + **escritura SOLO** de tareas `intent=plan` (los pasos del
+    plan). Las solicitudes de turno (Task del bot) siguen siendo de solo lectura.
+  - `CareTeam`: escritura del propio (`CareTeam?patient=%patient`).
+  - `Condition`: lectura general + **escritura SOLO** de los hallazgos SNOMED del plan
+    (menopausia 289903006, prematura 373717006, perimenopausia 307409000,
+    posmenopausia 76498008, quirúrgica 67207009).
+  > Requisito adicional: publicar en el server el `Questionnaire` canónico del plan
+  > (`MENOPAUSE_QUESTIONNAIRE_URL`); el paciente no puede crear Questionnaires, y el
+  > módulo usa el publicado si existe.
 - **Compartimento del paciente** — **solo lectura**: `Appointment`, `Coverage`,
   `Invoice` (pagos/señas), `DiagnosticReport`, `ServiceRequest` (sus solicitudes de
-  Segunda Opinión), `RiskAssessment` (score PREVENT), `CarePlan`, `Goal` (las metas del
-  Plan Bienestar; sin esta entrada el portal recibe 404 al leerlas), `MedicationRequest`,
-  `Immunization`, `Task` (sus solicitudes de turno).
-  > ⚠️ Decisión pendiente (Plan Bienestar drop-in): si el paciente debe poder INICIAR el
-  > plan él mismo (`empezarPlan` crea CarePlan+Goal+Task+CareTeam+Condition por
-  > transacción) y tildar pasos (`completarPaso` actualiza Task), esos recursos necesitan
-  > **escritura** acotada a `%patient`; si se mantiene el modelo "solicitud" (lo crea el
-  > equipo/bot), alcanza con esta lectura. La agenda y los planes/pagos
+  Segunda Opinión), `RiskAssessment` (score PREVENT), `MedicationRequest`,
+  `Immunization`. La agenda y los planes/pagos
   los gestiona Recepción; reservar es por *modelo de solicitud*, así que el paciente
   no escribe `Appointment`. La **Segunda Opinión** también es por *modelo de solicitud*:
   el paciente escribe su `QuestionnaireResponse` + `DocumentReference` y ejecuta el bot
