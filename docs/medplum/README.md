@@ -39,6 +39,8 @@ Cubre todo lo que el portal lee/escribe:
   - `Condition`: lectura general + **escritura SOLO** de los hallazgos SNOMED del plan
     (menopausia 289903006, prematura 373717006, perimenopausia 307409000,
     posmenopausia 76498008, quirúrgica 67207009).
+  - `PlanDefinition`: **solo lectura** (el módulo la lee para evaluar la elegibilidad;
+    sin esta entrada el portal recibe 404 al leerla).
   > Requisito adicional: publicar en el server el `Questionnaire` canónico del plan
   > (`MENOPAUSE_QUESTIONNAIRE_URL`); el paciente no puede crear Questionnaires, y el
   > módulo usa el publicado si existe.

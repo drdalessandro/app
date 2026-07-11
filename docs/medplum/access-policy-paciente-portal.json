@@ -1,10 +1,10 @@
 {
   "resourceType": "AccessPolicy",
-  "id": "45ff9a4e-e1c6-48d8-aaae-1932aadf216c",
+  "id": "13e6a16e-1510-4777-b96d-55cedb768d89",
   "meta": {
-    "project": "7ce5e559-f315-4538-abf2-61fa4922f996",
+    "project": "7f068d7d-4633-46e9-9eff-d52bc03625b9",
     "compartment": [
-      { "reference": "Project/7ce5e559-f315-4538-abf2-61fa4922f996" }
+      { "reference": "Project/7f068d7d-4633-46e9-9eff-d52bc03625b9" }
     ]
   },
   "name": "Paciente SOM — Portal",
@@ -17,12 +17,13 @@
 
     { "resourceType": "CarePlan", "readonly": true, "criteria": "CarePlan?subject=%patient" },
     { "resourceType": "CarePlan", "criteria": "CarePlan?subject=%patient&instantiates-canonical=https://epa-bienestar.ar/fhir/PlanDefinition/menopausia-cardiovascular" },
-    { "resourceType": "Goal", "criteria": "Goal?patient=%patient" },
+    { "resourceType": "Goal", "criteria": "Goal?subject=%patient" },
     { "resourceType": "Task", "readonly": true, "criteria": "Task?patient=%patient" },
     { "resourceType": "Task", "criteria": "Task?patient=%patient&intent=plan" },
-    { "resourceType": "CareTeam", "criteria": "CareTeam?patient=%patient" },
-    { "resourceType": "Condition", "readonly": true, "criteria": "Condition?patient=%patient" },
-    { "resourceType": "Condition", "criteria": "Condition?patient=%patient&code=http://snomed.info/sct|289903006,http://snomed.info/sct|373717006,http://snomed.info/sct|307409000,http://snomed.info/sct|76498008,http://snomed.info/sct|67207009" },
+    { "resourceType": "CareTeam", "criteria": "CareTeam?subject=%patient" },
+    { "resourceType": "Condition", "readonly": true, "criteria": "Condition?subject=%patient" },
+    { "resourceType": "Condition", "criteria": "Condition?subject=%patient&code=http://snomed.info/sct|289903006,http://snomed.info/sct|373717006,http://snomed.info/sct|307409000,http://snomed.info/sct|76498008,http://snomed.info/sct|67207009" },
+    { "resourceType": "PlanDefinition", "readonly": true },
 
     { "resourceType": "Appointment", "readonly": true, "criteria": "Appointment?actor=%patient" },
     { "resourceType": "Coverage", "readonly": true, "criteria": "Coverage?beneficiary=%patient" },
