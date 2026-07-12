@@ -19,6 +19,7 @@ import { formatHumanName } from '@medplum/core';
 import type { Patient, Practitioner } from '@medplum/fhirtypes';
 import { useMedplumProfile } from '@medplum/react';
 import {
+  IconCalendarEvent,
   IconChevronRight,
   IconClipboardHeart,
   IconDeviceWatch,
@@ -36,13 +37,15 @@ import {
 import type { Icon } from '@tabler/icons-react';
 import type { JSX } from 'react';
 import { useNavigate } from 'react-router';
+import { PlanBienestar100 } from '../components/PlanBienestar100';
 import classes from './HomePage.module.css';
 import { EstadioCkmCard, PlanBienestarCard, RiesgoPreventCard } from '@epa/plan-bienestar-react';
 
-// Tablero mobile: 3 acciones rápidas + filas compactas a las secciones.
+// Tablero mobile: la card CTA lleva a Pedir Segunda Opinión; las acciones rápidas y las
+// filas NO duplican esa entrada (el Consentimiento vive dentro de Salud).
 const mobileTiles: { icon: Icon; title: string; href: string }[] = [
-  { icon: IconStethoscope, title: 'Segunda Opinión', href: '/solicitar-som' },
-  { icon: IconReportMedical, title: 'Biomarcadores', href: '/health-record/biomarkers' },
+  { icon: IconReportMedical, title: 'Cargar resultado', href: '/health-record/biomarkers' },
+  { icon: IconCalendarEvent, title: 'Reservar', href: '/get-care' },
   { icon: IconMessage, title: 'Mensajes', href: '/Communication' },
 ];
 
@@ -51,7 +54,6 @@ const mobileRows: { icon: Icon; title: string; description: string; href: string
   { icon: IconReportMedical, title: 'Mis biomarcadores', description: 'Resultados y evolución', href: '/health-record/biomarkers' },
   { icon: IconFileText, title: 'Historia clínica', description: 'Estudios y registros', href: '/health-record' },
   { icon: IconClipboardHeart, title: 'Mi plan', description: 'Los pasos de tu seguimiento', href: '/care-plan' },
-  { icon: IconFileCheck, title: 'Consentimiento', description: 'Leé y firmá', href: '/health-record/consent' },
   { icon: IconWallet, title: 'Mi membresía', description: 'Turnos, sesiones y pagos', href: '/membership' },
 ];
 
@@ -198,6 +200,10 @@ export function HomePage(): JSX.Element {
           </Box>
         </Container>
 
+        {/* Plan Bienestar · 100 días (solo si el paciente está inscripto) */}
+        <Box mb="lg">
+          <PlanBienestar100 />
+        </Box>
         {/* Acciones rápidas */}
         <SimpleGrid cols={3} spacing="sm" mb="lg">
           {mobileTiles.map((t) => (
@@ -266,6 +272,10 @@ export function HomePage(): JSX.Element {
         </Container>
       </div>
 
+      {/* Plan Bienestar · 100 días (solo si el paciente está inscripto) */}
+      <Container pt={48}>
+        <PlanBienestar100 />
+      </Container>
       {/* Accesos rápidos */}
       <Container py={48}>
         {/* Plan Bienestar · 100 días: la card se auto-gestiona (null si el paciente no es elegible). */}

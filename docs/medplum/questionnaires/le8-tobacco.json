@@ -1,0 +1,127 @@
+{
+  "resourceType": "Questionnaire",
+  "url": "https://segundaopinionmedica.org/fhir/Questionnaire/le8-tobacco-v1",
+  "version": "1.0.0",
+  "status": "active",
+  "name": "le8-tobacco",
+  "title": "Tabaco y nicotina",
+  "subjectType": [
+    "Patient"
+  ],
+  "item": [
+    {
+      "linkId": "tabaco-estado",
+      "text": "¿Cuál es tu situación respecto del tabaco o la nicotina?",
+      "type": "choice",
+      "required": true,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "never",
+            "display": "Nunca fumé (ni vapeo)"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "former",
+            "display": "Fumé, pero lo dejé"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "current",
+            "display": "Fumo o vapeo actualmente"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "tabaco-tiempo-dejo",
+      "text": "¿Hace cuánto que lo dejaste?",
+      "type": "choice",
+      "enableWhen": [
+        {
+          "question": "tabaco-estado",
+          "operator": "=",
+          "answerCoding": {
+            "code": "former"
+          }
+        }
+      ],
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "lt1",
+            "display": "Hace menos de 1 año"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "1to5",
+            "display": "Entre 1 y 5 años"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "gte5",
+            "display": "5 años o más"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "tabaco-tipo",
+      "text": "¿Qué productos usás?",
+      "type": "choice",
+      "enableWhen": [
+        {
+          "question": "tabaco-estado",
+          "operator": "=",
+          "answerCoding": {
+            "code": "current"
+          }
+        }
+      ],
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "cigarrillos",
+            "display": "Cigarrillos"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "vapeo",
+            "display": "Vapeo / cigarrillo electrónico"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "otros",
+            "display": "Otros productos con nicotina"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "tabaco-cantidad",
+      "text": "En promedio, ¿cuántos cigarrillos por día? (si aplica)",
+      "type": "integer",
+      "enableWhen": [
+        {
+          "question": "tabaco-estado",
+          "operator": "=",
+          "answerCoding": {
+            "code": "current"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "tabaco-humo-ajeno",
+      "text": "¿Convivís con alguien que fuma dentro de tu casa (exposición al humo de otros)?",
+      "type": "boolean",
+      "required": true
+    }
+  ]
+}

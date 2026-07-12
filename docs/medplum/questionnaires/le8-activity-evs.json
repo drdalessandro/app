@@ -1,0 +1,37 @@
+{
+  "resourceType": "Questionnaire",
+  "url": "https://segundaopinionmedica.org/fhir/Questionnaire/le8-activity-evs-v1",
+  "version": "1.0.0",
+  "status": "active",
+  "name": "le8-activity-evs",
+  "title": "Actividad física",
+  "subjectType": [
+    "Patient"
+  ],
+  "item": [
+    {
+      "linkId": "evs-intro",
+      "type": "display",
+      "text": "Pensá en una semana típica. \"Actividad moderada a intensa\" es la que acelera tu respiración o tu pulso (caminata rápida, bici, nadar, correr, deportes, etc.)."
+    },
+    {
+      "linkId": "evs-days",
+      "text": "En una semana típica, ¿cuántos días hacés actividad física moderada a intensa?",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "linkId": "evs-minutes",
+      "text": "En esos días, ¿cuántos minutos en promedio dedicás a la actividad?",
+      "type": "integer",
+      "required": true,
+      "enableWhen": [
+        {
+          "question": "evs-days",
+          "operator": ">",
+          "answerInteger": 0
+        }
+      ]
+    }
+  ]
+}

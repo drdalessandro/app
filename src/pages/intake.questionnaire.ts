@@ -1,13 +1,13 @@
 // SPDX-FileCopyrightText: Copyright Segunda Opinión Médica
 // SPDX-License-Identifier: Apache-2.0
 //
-// Cuestionario de ingreso de Segunda Opinión Médica.
-// Fuente: brief §6.1 (antecedentes, cirugías, medicación, alergias) + contraindicaciones
-// absolutas del Consentimiento Informado (HBOT / IHHT). El médico de la primera
-// entrevista valida y firma; este cuestionario solo registra lo declarado por el paciente.
+// Cuestionario de ingreso de Segunda Opinión Médica (enfoque cardiovascular).
+// Registra antecedentes, factores de riesgo cardiovascular, medicación, cirugías/
+// procedimientos cardíacos y alergias declarados por el paciente. El médico valida y
+// firma; este cuestionario solo registra lo declarado.
 //
-// Nota: los linkId son descriptivos; el mapeo a códigos/tabla de contraindicaciones del
-// modelo FHIR se puede agregar más adelante.
+// Nota: los linkId son descriptivos; el mapeo a códigos del modelo FHIR se puede agregar
+// más adelante.
 import type { Questionnaire } from '@medplum/fhirtypes';
 
 /** URL canónica del cuestionario de ingreso (compartida con la app clínica vía Medplum). */
@@ -30,34 +30,59 @@ export const intakeQuestionnaire: Questionnaire = {
       type: 'group',
       item: [
         {
-          linkId: 'antecedentes-cronicos',
-          text: '¿Tenés alguna enfermedad crónica diagnosticada (cardiovascular, respiratoria, neurológica, oncológica, metabólica, etc.)?',
+          linkId: 'antecedentes-cardiovasculares',
+          text: '¿Tenés diagnóstico de alguna enfermedad cardiovascular (hipertensión, arritmia, insuficiencia cardíaca, enfermedad coronaria, valvulopatía, etc.)?',
           type: 'boolean',
         },
         {
-          linkId: 'antecedentes-detalle',
-          text: 'Contanos el detalle de tus antecedentes',
+          linkId: 'antecedentes-cv-detalle',
+          text: 'Contanos el detalle de tus antecedentes cardiovasculares',
           type: 'text',
-          enableWhen: [{ question: 'antecedentes-cronicos', operator: '=', answerBoolean: true }],
+          enableWhen: [{ question: 'antecedentes-cardiovasculares', operator: '=', answerBoolean: true }],
+        },
+        {
+          linkId: 'antecedentes-otros',
+          text: '¿Tenés otras enfermedades crónicas relevantes (renal, respiratoria, oncológica, etc.)? Detallá.',
+          type: 'text',
+        },
+      ],
+    },
+    {
+      linkId: 'factores-riesgo',
+      text: 'Factores de riesgo cardiovascular',
+      type: 'group',
+      item: [
+        { linkId: 'fr-hipertension', text: '¿Tenés hipertensión arterial?', type: 'boolean' },
+        { linkId: 'fr-diabetes', text: '¿Tenés diabetes?', type: 'boolean' },
+        { linkId: 'fr-dislipemia', text: '¿Tenés colesterol alto (dislipemia)?', type: 'boolean' },
+        {
+          linkId: 'fr-tabaquismo',
+          text: '¿Fumás?',
+          type: 'choice',
+          answerOption: [{ valueString: 'Sí' }, { valueString: 'No' }, { valueString: 'Ex fumador/a' }],
+        },
+        {
+          linkId: 'fr-familiares',
+          text: '¿Tenés antecedentes familiares de enfermedad cardiovascular (infarto, ACV o muerte súbita en familiares directos)?',
+          type: 'boolean',
         },
       ],
     },
     {
       linkId: 'cirugias',
-      text: 'Cirugías',
+      text: 'Cirugías y procedimientos',
       type: 'group',
       item: [
-        { linkId: 'cirugias-tiene', text: '¿Te realizaron alguna cirugía?', type: 'boolean' },
         {
-          linkId: 'cirugia-reciente-ont',
-          text: '¿Tuviste una cirugía de oído, nariz o tórax en los últimos 30 días?',
+          linkId: 'cirugias-cardiacas',
+          text: '¿Te realizaron alguna cirugía o procedimiento cardiovascular (angioplastia, stent, bypass, cirugía valvular, marcapasos/CDI)?',
           type: 'boolean',
         },
         {
           linkId: 'cirugias-detalle',
-          text: 'Detalle de tus cirugías (cuáles y cuándo)',
+          text: 'Detalle de tus cirugías o procedimientos (cuáles y cuándo)',
           type: 'text',
-          enableWhen: [{ question: 'cirugias-tiene', operator: '=', answerBoolean: true }],
+          enableWhen: [{ question: 'cirugias-cardiacas', operator: '=', answerBoolean: true }],
         },
       ],
     },
@@ -68,7 +93,7 @@ export const intakeQuestionnaire: Questionnaire = {
       item: [
         {
           linkId: 'medicacion-toma',
-          text: '¿Tomás alguna medicación actualmente? (incluí anticoagulantes y suplementos)',
+          text: '¿Tomás alguna medicación actualmente? (incluí anticoagulantes, antiagregantes y suplementos)',
           type: 'boolean',
         },
         {
@@ -91,45 +116,6 @@ export const intakeQuestionnaire: Questionnaire = {
           type: 'text',
           enableWhen: [{ question: 'alergias-tiene', operator: '=', answerBoolean: true }],
         },
-      ],
-    },
-    {
-      linkId: 'contraind-hbot',
-      text: 'Screening de seguridad — Cámara Hiperbárica (HBOT)',
-      type: 'group',
-      item: [
-        { linkId: 'hbot-neumotorax', text: '¿Tenés neumotórax no tratado?', type: 'boolean' },
-        {
-          linkId: 'hbot-infeccion-resp',
-          text: '¿Tenés una infección respiratoria alta aguda (resfrío, sinusitis u otitis)?',
-          type: 'boolean',
-        },
-        {
-          linkId: 'hbot-marcapasos',
-          text: '¿Tenés marcapasos o implantes electrónicos no certificados para uso hiperbárico?',
-          type: 'boolean',
-        },
-        { linkId: 'hbot-claustrofobia', text: '¿Tenés claustrofobia severa no controlada?', type: 'boolean' },
-        { linkId: 'hbot-convulsiones', text: '¿Tenés convulsiones no controladas?', type: 'boolean' },
-      ],
-    },
-    {
-      linkId: 'contraind-ihht',
-      text: 'Screening de seguridad — Entrenamiento Hipóxico (IHHT)',
-      type: 'group',
-      item: [
-        {
-          linkId: 'ihht-insuf-cardiaca',
-          text: '¿Tenés insuficiencia cardíaca descompensada o tuviste un infarto en los últimos 6 meses?',
-          type: 'boolean',
-        },
-        {
-          linkId: 'ihht-hta',
-          text: '¿Tenés presión arterial no controlada (mayor a 180/110 mmHg)?',
-          type: 'boolean',
-        },
-        { linkId: 'ihht-epoc', text: '¿Tenés EPOC severa (estadio IV)?', type: 'boolean' },
-        { linkId: 'ihht-tvp', text: '¿Tenés trombosis venosa profunda activa?', type: 'boolean' },
       ],
     },
     {

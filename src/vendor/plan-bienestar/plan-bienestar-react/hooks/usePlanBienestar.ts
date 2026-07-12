@@ -4,7 +4,7 @@ import {
   buildMenopauseCarePlanBundle,
 } from '@epa/careplan-menopausia';
 import { createReference, getReferenceString } from '@medplum/core';
-import type { Bundle, CarePlan, Goal, Patient, Reference, Task } from '@medplum/fhirtypes';
+import type { Bundle, CarePlan, Goal, Patient, Task } from '@medplum/fhirtypes';
 import { useMedplum } from '@medplum/react';
 import { useCallback, useEffect, useState } from 'react';
 import { usePaciente } from '../PlanBienestarContext';
@@ -96,25 +96,32 @@ export function usePlanBienestar(options: UsePlanBienestarOptions = {}): PlanBie
         return;
       }
 
-      // Tolerante a referencias rotas: un Goal/Task borrado en el servidor no
-      // puede tirar abajo la pagina entera (mostramos lo que si existe).
+      // Las metas se leen con UNA búsqueda por _id (no con GETs individuales): una
+      // búsqueda devuelve 200 con lo que la AccessPolicy permite ver, así que una meta
+      // no visible/borrada no rechaza la carga NI deja errores 404 en la consola.
+      const idsMetas = (plan.goal ?? [])
+        .map((referencia) => referencia.reference)
+        .filter((ref): ref is string => Boolean(ref?.startsWith('Goal/')))
+        .map((ref) => ref.slice('Goal/'.length));
       const [tareas, objetivos] = await Promise.all([
         medplum
           .searchResources('Task', { 'based-on': getReferenceString(plan) })
           .catch(() => [] as Task[]),
-        Promise.all(
-          (plan.goal ?? [])
-            .filter((referencia) => referencia.reference)
-            .map((referencia) =>
-              medplum.readReference(referencia as Reference<Goal>).catch(() => undefined),
-            ),
-        ),
+        idsMetas.length
+          ? medplum.searchResources('Goal', { _id: idsMetas.join(',') }).catch(() => [] as Goal[])
+          : Promise.resolve([] as Goal[]),
       ]);
       if (cancelado) return;
 
+      if (objetivos.length < idsMetas.length) {
+        console.warn(
+          `Plan Bienestar: ${idsMetas.length - objetivos.length} meta(s) del plan no visibles para el paciente (revisar Goal en la AccessPolicy del proyecto activo).`,
+        );
+      }
+
       setCarePlan(plan);
       setPasos(tareas);
-      setMetas(objetivos.filter((objetivo) => objetivo !== undefined));
+      setMetas(objetivos);
       setCargando(false);
     })().catch(() => {
       if (!cancelado) setCargando(false);

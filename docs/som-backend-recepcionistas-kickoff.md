@@ -14,19 +14,21 @@ acá.
 
 ## Proyecto Medplum (definido)
 
-- **Proyecto canónico de SOM: `78ead38c-0f59-4576-b196-71685537588c` — "HeartInnovations".**
-  Tanto el backend (`recepcionistas`) como el portal (`app`) deben apuntar a este proyecto.
-- ⚠️ **Acción pendiente en `app`:** hoy `app/.env.defaults` apunta a `7f068d7d-…`
-  (proyecto "Segunda Opinión Médica", 221 recursos FHIR). Para que el flujo SOM funcione end-to-end,
-  el portal debe repuntarse a `78ead38c-…` (HeartInnovations) — front y back tienen que
-  compartir el mismo proyecto FHIR. Confirmar y actualizar `MEDPLUM_PROJECT_ID`,
-  `MEDPLUM_CLIENT_ID` y la AccessPolicy del paciente en ese proyecto.
+- **Proyecto canónico de SOM: `7ce5e559-f315-4538-abf2-61fa4922f996` — "Segunda Opinión Médica"
+  (221 recursos FHIR cargados y verificados).** Tanto el backend (`recepcionistas`) como el
+  portal (`app`) deben apuntar a este proyecto. El portal (`app/.env.defaults`) ya lo usa.
+- ⚠️ **Acción pendiente en el server:** aplicar/sincronizar la AccessPolicy del paciente
+  **en este proyecto** (`7ce5e559-…`) y confirmar que el `ClientApplication` `516dfb15-…` y
+  las `ProjectMembership` de los pacientes pertenecen a él. Si la policy quedó aplicada en
+  otro proyecto (`7f068d7d-…` o `78ead38c-…`), el paciente recibe `403` en todo lo readonly
+  (`ObservationDefinition`, `Questionnaire`, `Invoice`) — que es exactamente el síntoma visto
+  en producción.
 
 ## ⚠️ Systems FHIR canónicos renombrados (el seed DEBE coincidir)
 
 El portal (`app`) ya migró todos los `system`/`url` canónicos de `biowellness.ar` /
 `bio.medplum.com.ar` a **`segundaopinionmedica.org`**. El seed de `recepcionistas` y los
-recursos FHIR del server (proyecto HeartInnovations) **deben re-seedearse con estos mismos
+recursos FHIR del server (proyecto `7ce5e559-…` "Segunda Opinión Médica") **deben re-seedearse con estos mismos
 valores**, o el portal deja de matchear los datos:
 
 | Concepto | Nuevo valor canónico |
@@ -53,10 +55,9 @@ funciona.** NO crear módulos/bots/seeds nuevos en paralelo: **MODIFICAR lo exis
 Antes de cambiar nada: leer, entender el patrón, y reusar.
 
 ## PROYECTO MEDPLUM (definido)
-SOM corre sobre el proyecto **`78ead38c-0f59-4576-b196-71685537588c` ("HeartInnovations")**.
-`MEDPLUM_PROJECT_ID=78ead38c-0f59-4576-b196-71685537588c`. Seedear/deployar SIEMPRE contra
-este proyecto. El portal (`drdalessandro/app`) debe apuntar al mismo (hoy todavía usa
-`7f068d7d-…`: hay que alinearlo).
+SOM corre sobre el proyecto **`7ce5e559-f315-4538-abf2-61fa4922f996` ("Segunda Opinión Médica")**.
+`MEDPLUM_PROJECT_ID=7ce5e559-f315-4538-abf2-61fa4922f996`. Seedear/deployar SIEMPRE contra
+este proyecto. El portal (`drdalessandro/app`) ya apunta al mismo.
 
 ## CONTEXTO DEL CAMBIO
 `recepcionistas` nació para un centro de **salud funcional / longevidad** (terapias HBOT,
@@ -79,9 +80,11 @@ y unos permisos. El contrato completo está en el repo `app`:
    - Crea una `ServiceRequest` (status `active`, `code` system
      `https://segundaopinionmedica.org/fhir/CodeSystem/som-services` / `som-cardiology`),
      con `reasonCode.text = motivo`, `supportingInfo` = QR + docs, extensión
-     `…/som-origin = origin`. Endurecer con `runAsUser`.
+     `…/som-origin = origin`. ⚠️ `runAsUser` DESACTIVADO (con la policy del paciente
+     la creación daría Forbidden; el bot escribe con su propia identidad).
    - Output: `{ ok, mensaje?, serviceRequestId? }`.
-   - PATRÓN A SEGUIR: clonar la mecánica del bot existente **`bw-solicitar-turno`**.
+   - PATRÓN A SEGUIR: la misma mecánica del bot de turnos `som-solicitar-turno` (ver §
+     "Turnos rebrandeados" abajo).
 
 2. **Bot `bot-som-report`** (interno; lo dispara una `Subscription` sobre
    `ServiceRequest?status=active&code=…som-services|som-cardiology`):
@@ -120,13 +123,65 @@ por los servicios cardiovasculares de SOM, tomados del menú de segundaopinionme
 - Historia Clínica · Contenidos
 NO inventar precios ni reglas: tomarlos del sitio / del usuario.
 
+## PATIENT JOURNEY (el portal ya lo implementó; el backend debe setear el origen)
+
+El portal muestra una pantalla de primera vez que ramifica según el origen del paciente:
+**Bienvenida** (auto-registrado) u **Onboarding** (invitado). El backend debe **setear al
+invitar** la extensión en el `Patient`:
+
+- URL: `https://segundaopinionmedica.org/fhir/StructureDefinition/patient-origin`
+- `valueCode`: `reception` (invitación de Recepción) | `referral` (derivación de colega)
+- Ausente ⇒ el portal lo trata como auto-registrado.
+
+El portal escribe (no tocar desde el backend):
+`…/StructureDefinition/onboarding-completed` (`valueDateTime`) cuando el paciente
+completa el journey.
+
+## PLAN BIENESTAR 100 DÍAS (gamificación; el backend crea el CarePlan al inscribir)
+
+El portal muestra una tarjeta de progreso (día X/100, hitos, racha semanal) calculada
+client-side. Detecta la inscripción así (en orden):
+
+1. **`CarePlan`** del paciente (contrato preferido) — crearlo al inscribir:
+   - `status: active`, `subject`: el paciente,
+   - `category` coding: `https://segundaopinionmedica.org/fhir/CodeSystem/care-plans`
+     / código **`plan-bienestar-100`**,
+   - `period.start` = día 1, `period.end` = start + 100 días.
+2. *Fallback*: `Coverage` activo cuyo `plan-codigo` contenga `BIENESTAR`, con
+   `period.start` cargado.
+
+Los hitos y la racha se calculan desde los recursos que el paciente ya genera
+(DocumentReference de consentimiento, Observations, QuestionnaireResponses LE8,
+ServiceRequest SOM) — el backend no tiene que escribir nada más para el MVP.
+
+## TURNOS REBRANDEADOS (el portal ya cambió; el backend debe alinear)
+
+El portal migró el flujo de "Pedir un turno" de terapias funcionales a servicios
+cardiovasculares (`app/src/fhir/solicitudes.ts`). El backend debe alinear:
+
+1. **Renombrar el bot** `bw-solicitar-turno` → **`som-solicitar-turno`** (deploy +
+   AccessPolicy). El portal ya ejecuta `som-solicitar-turno` y la AccessPolicy espejo ya
+   lo whitelistea. (También conviene de-brandear los bots de reserva
+   `bw-reservar-turno`/`bw-reservar-combo` → `som-*`; el portal no los ejecuta, pero el
+   prefijo `bw` = marca anterior.)
+2. **Input del bot** (lo que envía el portal): `{ pacienteRef, servicio, servicioCodigo,
+   preferenciaInicio?, preferenciaTexto?, nota }`. Antes eran `terapia`/`terapiaCodigo`;
+   ahora son **`servicio`/`servicioCodigo`**.
+3. **Catálogo de `servicioCodigo`** que el bot debe aceptar/validar (debe coincidir con
+   `SERVICIOS` en `app/src/fhir/solicitudes.ts`):
+   `CONSULTA_CARDIO`, `EVALUACION_INICIAL`, `TELECONSULTA`, `ECG`, `ECOCARDIOGRAMA`,
+   `ERGOMETRIA`, `HOLTER`, `MAPA`, `MONITOREO_REMOTO`, `REHABILITACION_CV`,
+   `LABORATORIO_CARDIO`. (Validar/ajustar contra el sitio y los precios reales.)
+4. El `Task` sigue con `code=solicitud-turno` (el portal lo lee así). Reglas de reserva
+   funcionales (p.ej. "HBOT primero") ya no aplican; reemplazar por las de cardiología.
+
 ## ORDEN DE TRABAJO (recon primero, NO refactor)
 1. `ls -la && cat package.json` y leer el README.
 2. Mapear lo existente que se REUSA/MODIFICA:
-   - Bots: `bw-solicitar-turno`, `bw-reservar-turno`, `bw-reservar-combo` (ver cómo se
-     definen/despliegan: `npm run deploy:bots`).
+   - Bots: `bw-solicitar-turno` (→ renombrar a `som-solicitar-turno`), `bw-reservar-turno`,
+     `bw-reservar-combo` (ver cómo se definen/despliegan: `npm run deploy:bots`).
    - Seed/FHIR: `src/fhir/access-policies.ts`, `src/fhir/coverage.ts`, `src/lib/planes.ts`,
-     catálogo de terapias/servicios, `npm run seed`.
+     catálogo de terapias → reemplazar por el de servicios cardiovasculares, `npm run seed`.
    - App de recepción (vistas, p.ej. "Solicitudes").
 3. Proponer el plan de CAMBIOS sobre esos archivos (no nuevos), confirmarlo, y recién
    entonces editar.

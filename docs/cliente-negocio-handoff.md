@@ -1,5 +1,11 @@
 # Handoff — Capa Cliente/negocio (Sesiones, Pagos, Reservar por bots)
 
+> ⚠️ **LEGACY (salud funcional).** Este documento describe la integración original con
+> terapias funcionales (HBOT/IHHT/etc.). Para Segunda Opinión Médica el catálogo de
+> turnos pasó a **servicios cardiovasculares** y el bot de turnos se renombró a
+> **`som-solicitar-turno`**. Ver `som-backend-recepcionistas-kickoff.md` y
+> `medplum/bot-som-interface.md` (fuentes de verdad para SOM).
+
 Contexto para la integración con ambos repos (`portal` + `recepcionistas`).
 Objetivo: cablear en el portal las **Sesiones** y **Pagos** del eje Cliente, y la
 **reserva de turnos** de recepción.
@@ -65,7 +71,7 @@ Objetivo: cablear en el portal las **Sesiones** y **Pagos** del eje Cliente, y l
 5. Reglas que valida el bot (orden HBOT primero, capacidad/desfasaje, ventana, seña) — para reflejarlas en la UI.
 
 ### E. AccessPolicy
-- Confirmar que "Paciente — Portal" da `read` de los recursos de A/B acotado al paciente; si falta alguno, agregarlo a `docs/medplum/access-policy-paciente-portal.json`.
+- Confirmar que "Paciente SOM — Portal" da `read` de los recursos de A/B acotado al paciente; si falta alguno, agregarlo a `docs/medplum/access-policy-paciente-portal.json`.
 
 ## Puntos de integración en el portal
 
@@ -88,20 +94,21 @@ R-13 ventana, seña 50%).
 Cómo quedó:
 1. **Portal** (`src/pages/GetCarePage.tsx`): reemplazado el `$find`/`$hold` por un
    formulario (terapia de `src/fhir/solicitudes.ts` → `TERAPIAS`, preferencia de
-   horario y nota). Al enviar ejecuta el bot **`bw-solicitar-turno`** y lista "Mis
+   horario y nota). Al enviar ejecuta el bot **`som-solicitar-turno`** y lista "Mis
    solicitudes" con su estado.
-2. **Recepción** (`recepcionistas`): bot `bw-solicitar-turno` crea un `Task`
+2. **Recepción** (`recepcionistas`): bot `som-solicitar-turno` crea un `Task`
    (`code=solicitud-turno`, `status=requested`) y avisa a Recepción por WhatsApp
    (secret `RECEPCION_WHATSAPP_TO`). Lógica pura en `src/lib/solicitudes.ts` (testeada).
    Nueva vista **"Solicitudes"** en la app de recepción para atender/confirmar.
 3. **AccessPolicy** (ambos espejos): el paciente solo **lee** sus `Task`
-   (`Task?patient=%patient`) y solo puede **ejecutar** `bw-solicitar-turno`
-   (`Bot?name=bw-solicitar-turno`). No puede crear `Appointment` ni ejecutar otros bots.
+   (`Task?patient=%patient`) y solo puede **ejecutar** `som-solicitar-turno`
+   (`Bot?name=som-solicitar-turno`). No puede crear `Appointment` ni ejecutar otros bots.
 
-> Para activarlo en el server: `npm run deploy:bots` (deploya `bw-solicitar-turno`),
+> Para activarlo en el server: `npm run deploy:bots` (deploya `som-solicitar-turno`),
 > `npm run seed` (AccessPolicy) y el Project Secret `RECEPCION_WHATSAPP_TO`.
-> Endurecimiento opcional: crear el bot con `runAsUser` para que `requester` no se
-> pueda falsificar (mientras tanto, Recepción verifica al confirmar).
+> ⚠️ `runAsUser` debe quedar DESACTIVADO: con la policy del paciente (Task de
+> solo-lectura) la creación del Task daría Forbidden. El bot escribe con su propia
+> identidad y Recepción verifica al confirmar.
 
 Futuro (si se quisiera **reserva inmediata** por bots): endurecer
 `bw-reservar-turno`/`bw-reservar-combo` para derivar el paciente del login (no del
@@ -112,5 +119,5 @@ input) antes de habilitar su ejecución al paciente.
 - [x] `src/fhir/membership.ts`: fetch de sesiones y pagos por paciente.
 - [x] Cablear secciones *Sesiones* y *Pagos* en `/membership`.
 - [x] Reconciliar AccessPolicy (sumar `Invoice`; unificar con el seed). **Falta aplicarla en el server.**
-- [x] Reserva online por **solicitud** (`Task` + bot `bw-solicitar-turno` + vista Recepción).
+- [x] Reserva online por **solicitud** (`Task` + bot `som-solicitar-turno` + vista Recepción).
 - [x] `npm run build` verde.

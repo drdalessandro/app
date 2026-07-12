@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: Copyright Segunda Opinión Médica
 // SPDX-License-Identifier: Apache-2.0
 //
-// Reservar un turno — modelo de "solicitud". El paciente pide (terapia + preferencia)
-// y Recepción confirma con los bots de reserva (que aplican las reglas: HBOT primero,
-// capacidad, ventana, seña). El portal NO escribe la agenda: solo ejecuta el bot
-// `bw-solicitar-turno` y muestra el estado de sus solicitudes.
+// Reservar un turno — modelo de "solicitud". El paciente pide (servicio + preferencia)
+// y Recepción confirma con los bots de reserva (que aplican las reglas: capacidad,
+// ventana, seña). El portal NO escribe la agenda: solo ejecuta el bot
+// `som-solicitar-turno` y muestra el estado de sus solicitudes.
 import {
   Alert,
   Badge,
@@ -27,7 +27,7 @@ import { IconCalendarPlus, IconCircleCheck, IconInfoCircle } from '@tabler/icons
 import { useCallback, useEffect, useState } from 'react';
 import type { JSX } from 'react';
 import { showErrorNotification } from '../utils/notifications';
-import { cargarMisSolicitudes, crearSolicitud, ESTADO_SOLICITUD, TERAPIAS } from '../fhir/solicitudes';
+import { cargarMisSolicitudes, crearSolicitud, ESTADO_SOLICITUD, SERVICIOS } from '../fhir/solicitudes';
 import { MyAppointments } from './MyAppointments';
 
 function SolicitudCard({ t }: { t: Task }): JSX.Element {
@@ -53,7 +53,7 @@ export function GetCare(): JSX.Element {
   const medplum = useMedplum();
   const patient = medplum.getProfile() as Patient;
 
-  const [terapia, setTerapia] = useState<string | null>(null);
+  const [servicio, setServicio] = useState<string | null>(null);
   const [preferencia, setPreferencia] = useState('');
   const [nota, setNota] = useState('');
   const [enviando, setEnviando] = useState(false);
@@ -68,7 +68,7 @@ export function GetCare(): JSX.Element {
   useEffect(recargar, [recargar]);
 
   const enviar = async (): Promise<void> => {
-    const elegida = TERAPIAS.find((x) => x.codigo === terapia);
+    const elegida = SERVICIOS.find((x) => x.codigo === servicio);
     if (!elegida) {
       return;
     }
@@ -76,14 +76,14 @@ export function GetCare(): JSX.Element {
     setOk(false);
     try {
       const r = await crearSolicitud(medplum, patient, {
-        terapia: elegida.label,
-        terapiaCodigo: elegida.codigo,
+        servicio: elegida.label,
+        servicioCodigo: elegida.codigo,
         preferenciaTexto: preferencia.trim() || undefined,
         nota: nota.trim() || undefined,
       });
       if (r.ok) {
         setOk(true);
-        setTerapia(null);
+        setServicio(null);
         setPreferencia('');
         setNota('');
         recargar();
@@ -110,8 +110,8 @@ export function GetCare(): JSX.Element {
         Pedir un turno
       </Title>
       <Text c="dimmed" size="sm" mb="md">
-        Elegí la terapia y tu preferencia de horario. El equipo de Segunda Opinión Médica te confirma el turno (día y hora exactos)
-        según disponibilidad.
+        Elegí el servicio o estudio y tu preferencia de horario. El equipo de Segunda Opinión Médica te confirma el
+        turno (día y hora exactos) según disponibilidad.
       </Text>
 
       {ok && (
@@ -122,13 +122,13 @@ export function GetCare(): JSX.Element {
 
       <Stack gap="sm" maw={460}>
         <Select
-          label="Terapia"
-          placeholder="Elegí una terapia"
+          label="Servicio o estudio"
+          placeholder="Elegí un servicio"
           required
           searchable
-          data={TERAPIAS.map((t) => ({ value: t.codigo, label: t.label }))}
-          value={terapia}
-          onChange={setTerapia}
+          data={SERVICIOS.map((s) => ({ value: s.codigo, label: s.label }))}
+          value={servicio}
+          onChange={setServicio}
         />
         <TextInput
           label="Preferencia de horario"
@@ -145,7 +145,7 @@ export function GetCare(): JSX.Element {
           onChange={(e) => setNota(e.currentTarget.value)}
         />
         <Group>
-          <Button leftSection={<IconCalendarPlus size={16} />} loading={enviando} disabled={!terapia} onClick={enviar}>
+          <Button leftSection={<IconCalendarPlus size={16} />} loading={enviando} disabled={!servicio} onClick={enviar}>
             Enviar solicitud
           </Button>
         </Group>

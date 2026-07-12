@@ -53,7 +53,7 @@ export function Router(): JSX.Element {
         <Route index element={<Navigate replace to="/health-record/biomarkers" />} />
         <Route path="lab-results" element={<LabResults />} />
         <Route path="lab-results/:resultId" element={<LabResult />} />
-        <Route path="biomarkers" element={<Navigate replace to="/health-record/biomarkers/endocrinologia" />} />
+        <Route path="biomarkers" element={<Navigate replace to="/health-record/biomarkers/metabolico" />} />
         <Route path="biomarkers/:panelId" element={<BiomarkerPanel />} />
         <Route path="consent" element={<InformedConsent />} />
         <Route path="medications" element={<Medications />} />

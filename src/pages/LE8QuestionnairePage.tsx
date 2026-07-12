@@ -18,6 +18,7 @@ import { Loading } from '../components/Loading';
 import { showErrorNotification } from '../utils/notifications';
 import { fixQuestionnaireResponseTimes, relaxRequiredBooleans } from '../utils/questionnaire';
 import { le8QuestionnaireBySlug } from '../le8';
+import { le8QuestionnaireDef } from '../le8.questionnaires';
 
 export function LE8QuestionnairePage(): JSX.Element {
   const medplum = useMedplum();
@@ -37,12 +38,17 @@ export function LE8QuestionnairePage(): JSX.Element {
     // pantalla de "¡Gracias!" del anterior queda pegada y no deja cargar otro.
     setIsSubmitted(false);
     setQuestionnaire(undefined);
+    // La fuente de verdad es el Questionnaire del server (mismo url canónico); si no está
+    // cargado o da 403, usamos la definición local (`le8.questionnaires.ts`) como fallback
+    // para que el paciente pueda completarlo igual. La respuesta referencia el url canónico,
+    // así que el dashboard la interpreta lo mismo.
+    const local = le8QuestionnaireDef(meta.slug);
     medplum
       .searchOne('Questionnaire', { url: meta.url })
-      .then((q) => setQuestionnaire(q ? relaxRequiredBooleans(q) : null))
+      .then((q) => setQuestionnaire(q ? relaxRequiredBooleans(q) : (local ?? null)))
       .catch((err) => {
-        setQuestionnaire(null);
-        showErrorNotification(err);
+        console.warn('Cuestionario LE8 desde el server no disponible; usando definición local.', err);
+        setQuestionnaire(local ?? null);
       });
   }, [medplum, meta?.url]);
 
