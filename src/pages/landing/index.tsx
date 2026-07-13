@@ -155,6 +155,38 @@ export function LandingPage(): JSX.Element {
           </SimpleGrid>
         </Container>
 
+        {/* Salud CKM: la guía AHA explicada fácil */}
+        <Container size="lg" py={{ base: 44, md: 64 }}>
+          <Stack align="center" gap="xs" mb="xl">
+            <Text className={classes.eyebrow}>Salud CKM · Guía AHA 2023</Text>
+            <Title className={classes.sectionTitle} ta="center" maw={760}>
+              Corazón, riñones y metabolismo: un solo sistema, cinco fases
+            </Title>
+            <Text c="gray.7" size="lg" ta="center" maw={720}>
+              La guía AHA 2023 (Ndumele y col.) ordena tu salud cardio-reno-metabólica en estadios 0 a 4 para actuar
+              antes del evento. Conocé tu fase y pedí tu segunda opinión con contexto.
+            </Text>
+          </Stack>
+          <Group justify="center" gap="sm" mb="lg" wrap="wrap">
+            {[
+              { n: 0, label: 'Salud preservada', color: 'teal' },
+              { n: 1, label: 'Adiposidad / prediabetes', color: 'lime' },
+              { n: 2, label: 'Factores metabólicos o renales', color: 'yellow' },
+              { n: 3, label: 'Enfermedad subclínica', color: 'orange' },
+              { n: 4, label: 'Enfermedad establecida', color: 'red' },
+            ].map((e) => (
+              <Badge key={e.n} size="lg" radius="xl" variant="light" color={e.color}>
+                {e.n} · {e.label}
+              </Badge>
+            ))}
+          </Group>
+          <Group justify="center">
+            <Button size="md" radius="xl" rightSection={<IconArrowRight size={18} />} onClick={() => go('/register')}>
+              Descubrí tu estadío — Crear cuenta
+            </Button>
+          </Group>
+        </Container>
+
         {/* Por qué una segunda opinión */}
         <Box className={classes.band}>
           <Container size="lg" py={{ base: 44, md: 64 }}>

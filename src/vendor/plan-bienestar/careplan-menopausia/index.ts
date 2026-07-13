@@ -40,6 +40,51 @@ export {
   type QuestionnaireContext,
 } from './builders/index.js';
 
+// CKM staging (AHA/Ndumele 0-4) ------------------------------------------------
+export {
+  evaluateCkmStage,
+  extractCkmInput,
+  buildCkmStageObservation,
+  CKM_LIMITES,
+  CKM_STAGE_LABEL,
+  type CkmStage,
+  type CkmSubStage,
+  type CkmCriterion,
+  type CkmConditions,
+  type CkmInput,
+  type CkmResult,
+  type CkmFhirContext,
+  type CkmObservationContext,
+} from './ckm/index.js';
+
+// PREVENT risk (AHA/Khan 2024) -------------------------------------------------
+export {
+  calculatePrevent,
+  preventDataFaltante,
+  extractPreventInput,
+  bandaAscvd,
+  PREVENT_VERIFIED,
+  PREVENT_CITATION,
+  type PreventInput,
+  type PreventResult,
+  type PreventRiesgos,
+  type PreventBanda,
+  type PreventOutcome,
+  type PreventSex,
+  type PreventFhirContext,
+} from './prevent/index.js';
+
+// CKM assessment parameters + reference values (AHA/Ndumele) -------------------
+export {
+  PARAMETROS_CKM,
+  parametrosParaSexo,
+  clasificar,
+  type ParametroCkm,
+  type ParametroCategoria,
+  type ParametroDireccion,
+  type RangoReferencia,
+} from './referencia/parametros.js';
+
 // Eligibility (Patient vs PlanDefinition.useContext) ---------------------------
 export {
   evaluateEligibility,

@@ -25,5 +25,5 @@ cp -r /tmp/pb/packages/plan-bienestar-react/src src/vendor/plan-bienestar/plan-b
 ```
 
 No editar a mano dentro de esta carpeta: los cambios se hacen en el monorepo y
-se re-sincronizan, para que las apps anfitrionas (esta y EPA-Developments/app) no
+se re-sincronizan, para que las apps anfitrionas (esta y drdalessandro/app) no
 diverjan.

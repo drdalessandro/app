@@ -44,6 +44,11 @@ export function esCarePlanDelPlan(carePlan: CarePlan, url: string = MENOPAUSE_PL
   );
 }
 
+/** Sortable creation date of a CarePlan (created > period.start > lastUpdated). */
+function fechaDelPlan(carePlan: CarePlan): string {
+  return carePlan.created ?? carePlan.period?.start ?? carePlan.meta?.lastUpdated ?? '';
+}
+
 /**
  * Loads (and lets the patient start) their CarePlan instantiated from the
  * plan's PlanDefinition, plus its Tasks ("pasos") and Goals ("metas").
@@ -77,7 +82,10 @@ export function usePlanBienestar(options: UsePlanBienestarOptions = {}): PlanBie
         subject: getReferenceString(paciente),
         status: 'active',
       });
-      const plan = planes.find((candidate) => esCarePlanDelPlan(candidate, url));
+      // El mas reciente primero: si quedaron planes viejos de pruebas, gana el nuevo.
+      const plan = planes
+        .filter((candidate) => esCarePlanDelPlan(candidate, url))
+        .sort((a, b) => fechaDelPlan(b).localeCompare(fechaDelPlan(a)))[0];
       if (cancelado) return;
 
       if (!plan) {
@@ -90,13 +98,15 @@ export function usePlanBienestar(options: UsePlanBienestarOptions = {}): PlanBie
 
       // Las metas se leen con UNA búsqueda por _id (no con GETs individuales): una
       // búsqueda devuelve 200 con lo que la AccessPolicy permite ver, así que una meta
-      // no legible no rechaza la carga NI deja errores 404 en la consola del navegador.
+      // no visible/borrada no rechaza la carga NI deja errores 404 en la consola.
       const idsMetas = (plan.goal ?? [])
         .map((referencia) => referencia.reference)
         .filter((ref): ref is string => Boolean(ref?.startsWith('Goal/')))
         .map((ref) => ref.slice('Goal/'.length));
       const [tareas, objetivos] = await Promise.all([
-        medplum.searchResources('Task', { 'based-on': getReferenceString(plan) }),
+        medplum
+          .searchResources('Task', { 'based-on': getReferenceString(plan) })
+          .catch(() => [] as Task[]),
         idsMetas.length
           ? medplum.searchResources('Goal', { _id: idsMetas.join(',') }).catch(() => [] as Goal[])
           : Promise.resolve([] as Goal[]),

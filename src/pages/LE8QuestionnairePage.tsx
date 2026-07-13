@@ -5,7 +5,7 @@
 // Essential 8 (por slug) y, al enviarlo, crea un QuestionnaireResponse a nombre del
 // propio paciente logueado. El dashboard lo interpreta automáticamente: el portal solo
 // muestra el formulario y guarda la respuesta; no toca el Questionnaire ni el dashboard.
-import { Stack, Text, ThemeIcon, Title } from '@mantine/core';
+import { Button, Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { createReference } from '@medplum/core';
 import type { Patient, Questionnaire, QuestionnaireResponse } from '@medplum/fhirtypes';
@@ -16,7 +16,7 @@ import type { JSX } from 'react';
 import { useParams } from 'react-router';
 import { Loading } from '../components/Loading';
 import { showErrorNotification } from '../utils/notifications';
-import { fixQuestionnaireResponseTimes } from '../utils/questionnaire';
+import { fixQuestionnaireResponseTimes, relaxRequiredBooleans } from '../utils/questionnaire';
 import { le8QuestionnaireBySlug } from '../le8';
 import { le8QuestionnaireDef } from '../le8.questionnaires';
 
@@ -34,6 +34,9 @@ export function LE8QuestionnairePage(): JSX.Element {
     if (!meta) {
       return;
     }
+    // Al cambiar de cuestionario (slug) reseteamos el estado: sin esto, la
+    // pantalla de "¡Gracias!" del anterior queda pegada y no deja cargar otro.
+    setIsSubmitted(false);
     setQuestionnaire(undefined);
     // La fuente de verdad es el Questionnaire del server (mismo url canónico); si no está
     // cargado o da 403, usamos la definición local (`le8.questionnaires.ts`) como fallback
@@ -42,12 +45,12 @@ export function LE8QuestionnairePage(): JSX.Element {
     const local = le8QuestionnaireDef(meta.slug);
     medplum
       .searchOne('Questionnaire', { url: meta.url })
-      .then((q) => setQuestionnaire(q ?? local ?? null))
+      .then((q) => setQuestionnaire(q ? relaxRequiredBooleans(q) : (local ?? null)))
       .catch((err) => {
         console.warn('Cuestionario LE8 desde el server no disponible; usando definición local.', err);
         setQuestionnaire(local ?? null);
       });
-  }, [medplum, meta]);
+  }, [medplum, meta?.url]);
 
   if (!meta) {
     return (
@@ -108,6 +111,9 @@ export function LE8QuestionnairePage(): JSX.Element {
             Tus respuestas quedaron registradas. El equipo de Segunda Opinión Médica las usa para tu evaluación cardiovascular
             (Life's Essential 8).
           </Text>
+          <Button variant="light" radius="xl" onClick={() => setIsSubmitted(false)}>
+            Responder de nuevo
+          </Button>
         </Stack>
       ) : (
         <>
