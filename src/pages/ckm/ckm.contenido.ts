@@ -29,7 +29,7 @@ export const QUE_ES_CKM = {
   titulo: 'Tu corazón, tus riñones y tu metabolismo trabajan en equipo',
   parrafos: [
     'La salud CKM (Cardio-Reno-Metabólica) mira a tu corazón, tus riñones y tu metabolismo como un solo sistema: cuando uno se desequilibra, arrastra a los otros. La presión, el azúcar, el colesterol, el peso y la función renal están conectados.',
-    'La Asociación Americana del Corazón (AHA) publicó en 2023 una guía (Ndumele y col.) que ordena esa conexión en fases o estadios, del 0 al 4. La idea es simple y poderosa: detectar en qué fase estás HOY para actuar ANTES de que aparezca un evento como un infarto o un ACV.',
+    'La Asociación Americana del Corazón (AHA) publicó en 2026 una guía (Ndumele y col.) que ordena esa conexión en fases o estadios, del 0 al 4. La idea es simple y poderosa: detectar en qué fase estás HOY para actuar ANTES de que aparezca un evento como un infarto o un ACV.',
   ],
 } as const;
 
