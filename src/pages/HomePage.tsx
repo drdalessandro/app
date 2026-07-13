@@ -23,6 +23,7 @@ import {
   IconChevronRight,
   IconClipboardHeart,
   IconDeviceWatch,
+  IconDropletHeart,
   IconDna2,
   IconFileCheck,
   IconFileText,
@@ -50,6 +51,7 @@ const mobileTiles: { icon: Icon; title: string; href: string }[] = [
 ];
 
 const mobileRows: { icon: Icon; title: string; description: string; href: string }[] = [
+  { icon: IconDropletHeart, title: 'Entendé tu salud CKM', description: 'Corazón, riñones y metabolismo, fase por fase', href: '/ckm' },
   { icon: IconStethoscope, title: 'Mi Segunda Opinión', description: 'Estado e informe de tu consulta', href: '/mi-segunda-opinion' },
   { icon: IconReportMedical, title: 'Mis biomarcadores', description: 'Resultados y evolución', href: '/health-record/biomarkers' },
   { icon: IconFileText, title: 'Historia clínica', description: 'Estudios y registros', href: '/health-record' },
@@ -71,6 +73,12 @@ const quickActions: CardItem[] = [
     title: 'Pedir Segunda Opinión',
     description: 'Iniciá tu segunda opinión cardiológica: cargá tu caso y tus estudios.',
     href: '/solicitar-som',
+  },
+  {
+    icon: IconDropletHeart,
+    title: 'Tu salud CKM',
+    description: 'La guía AHA explicada fácil: descubrí tu estadío (0-4) y qué hacer en cada fase.',
+    href: '/ckm',
   },
   {
     icon: IconReportMedical,
@@ -110,7 +118,7 @@ const services: CardItem[] = [
   {
     icon: IconStethoscope,
     title: 'Segunda Opinión Cardiológica',
-    description: 'Una revisión experta de tu caso por cardiólogos de prestigio internacional.',
+    description: 'Una revisión experta de tu caso por cardiólogos de prestigio internacional, según tu estadío CKM (guía AHA 2023).',
   },
   {
     icon: IconUsers,

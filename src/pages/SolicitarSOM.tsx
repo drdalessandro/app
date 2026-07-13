@@ -27,9 +27,10 @@ import { Document, useMedplum } from '@medplum/react';
 import { IconCircleCheck, IconFileUpload, IconInfoCircle, IconSend } from '@tabler/icons-react';
 import { useState } from 'react';
 import type { JSX } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import { crearSolicitudSOM, fileToArchivoSOM, type OrigenSOM } from '../fhir/som';
 import { showErrorNotification } from '../utils/notifications';
+import { motivoPorEstadio } from './ckm/ckm.contenido';
 import { ANTECEDENTES_CV, ORIGENES_SOM } from './SolicitarSOM.data';
 
 function getEmail(patient: Patient): string {
@@ -42,8 +43,15 @@ export function SolicitarSOM(): JSX.Element {
   const patient = medplum.getProfile() as Patient;
   const patientName = patient.name?.[0] ? formatHumanName(patient.name[0]) : '—';
 
+  const [searchParams] = useSearchParams();
+  // Si viene desde /ckm con su estadío, el motivo llega prellenado (editable).
+  const estadioParam = Number.parseInt(searchParams.get('estadio') ?? '', 10);
+  const motivoInicial = Number.isInteger(estadioParam) && estadioParam >= 0 && estadioParam <= 4
+    ? motivoPorEstadio(estadioParam)
+    : '';
+
   const [origin, setOrigin] = useState<OrigenSOM>('self');
-  const [motivo, setMotivo] = useState('');
+  const [motivo, setMotivo] = useState(motivoInicial);
   const [antecedentes, setAntecedentes] = useState<string[]>([]);
   const [antecedentesTexto, setAntecedentesTexto] = useState('');
   const [medicacion, setMedicacion] = useState('');

@@ -32,6 +32,7 @@ import { PatientIntakeQuestionnairePage } from './pages/PatientIntakeQuestionnai
 import { QuestionnairePage } from './pages/QuestionnairePage';
 import { ScreeningQuestionnairePage } from './pages/ScreeningQuestionnairePage';
 import { MiSegundaOpinion } from './pages/MiSegundaOpinion';
+import { CkmEducacion } from './pages/ckm/CkmEducacion';
 import { SignOutPage } from './pages/SignOutPage';
 import { SolicitarSOM } from './pages/SolicitarSOM';
 import { Welcome } from './pages/Welcome';
@@ -77,6 +78,8 @@ export function Router(): JSX.Element {
         <Route path="plan-100-dias/*" element={<PlanBienestarRoutes />} />
       </Route>
       <Route path="get-care" element={<GetCare />} />
+      {/* Educación CKM: guía AHA/Ndumele (estadios 0-4) → Segunda Opinión → Plan Bienestar. */}
+      <Route path="ckm" element={<CkmEducacion />} />
       <Route path="solicitar-som" element={<SolicitarSOM />} />
       <Route path="mi-segunda-opinion" element={<MiSegundaOpinion />} />
       <Route path="membership" element={<MembershipPage />} />
