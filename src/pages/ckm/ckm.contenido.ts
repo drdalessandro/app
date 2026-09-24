@@ -91,7 +91,7 @@ export const ESTADIOS: EstadioInfo[] = [
       'Enfermedad renal crónica en etapas iniciales.',
     ],
     quePodesHacer:
-      'Acá el tratamiento correcto cambia el pronóstico: metas de presión, azúcar y lípidos claras, y controles renales. Una segunda opinión ordena prioridades.',
+      'Acá el tratamiento correcto cambia el pronóstico: metas de presión, azúcar y lípidos claras, y controles renales. Tu profesional de la red te ayuda a ordenar prioridades.',
     color: 'yellow',
   },
   {
@@ -104,7 +104,7 @@ export const ESTADIOS: EstadioInfo[] = [
       'Riesgo PREVENT alto, equivalente a enfermedad subclínica.',
     ],
     quePodesHacer:
-      'Momento clave para intensificar el tratamiento y evitar el primer evento. Una segunda opinión experta puede redefinir tu plan por completo.',
+      'Momento clave para intensificar el tratamiento y evitar el primer evento. El acompañamiento experto del plan puede redefinir tu tratamiento.',
     color: 'orange',
   },
   {
@@ -118,7 +118,7 @@ export const ESTADIOS: EstadioInfo[] = [
       '4a: sin falla renal · 4b: con falla renal (cambia el manejo).',
     ],
     quePodesHacer:
-      'El tratamiento óptimo y la rehabilitación marcan la diferencia en cómo vivís de acá en adelante. Una segunda opinión confirma que estás recibiendo lo mejor disponible.',
+      'El tratamiento óptimo y la rehabilitación marcan la diferencia en cómo vivís de acá en adelante. Tu profesional de la red revisa que recibas lo mejor disponible.',
     color: 'red',
   },
 ];

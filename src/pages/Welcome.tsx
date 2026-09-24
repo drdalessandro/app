@@ -45,7 +45,7 @@ const PASOS_SELF: Paso[] = [
   {
     icon: IconUserCheck,
     title: 'Completá tu perfil',
-    description: 'Unas preguntas simples para que el informe salga a tu nombre.',
+    description: 'Unas preguntas simples para personalizar tu plan.',
   },
   {
     icon: IconFileCheck,
@@ -54,8 +54,8 @@ const PASOS_SELF: Paso[] = [
   },
   {
     icon: IconStethoscope,
-    title: 'Pedí tu Segunda Opinión',
-    description: 'Contanos tu caso, subí tus estudios y recibí tu informe cardiológico.',
+    title: 'Completá tu salud cardiovascular',
+    description: "Respondé los cuestionarios Life's Essential 8 y arrancá tu Plan Bienestar de 100 días.",
   },
 ];
 
@@ -72,8 +72,8 @@ const PASOS_INVITADO: Paso[] = [
   },
   {
     icon: IconStethoscope,
-    title: 'Completá tu solicitud',
-    description: 'Sumá el motivo de consulta y los estudios que tengas para tu Segunda Opinión.',
+    title: 'Completá tu salud cardiovascular',
+    description: "Respondé los cuestionarios Life's Essential 8 y arrancá tu Plan Bienestar de 100 días.",
   },
 ];
 
@@ -133,9 +133,9 @@ export function Welcome(): JSX.Element {
   const titulo = esInvitado ? `Hola ${nombre}, te estábamos esperando` : `¡Bienvenido/a ${nombre}!`;
   const intro = esInvitado
     ? origin === 'referral'
-      ? 'Tu médico te derivó a Segunda Opinión Médica para una revisión cardiológica experta. Confirmá tus datos y en unos pasos completás tu solicitud.'
-      : 'Nuestro equipo te invitó a Segunda Opinión Médica. Confirmá tus datos y en unos pasos completás tu solicitud.'
-    : 'Creaste tu cuenta en Segunda Opinión Médica: una segunda opinión cardiológica experta, basada en tus datos y en la evidencia.';
+      ? 'Tu médico te sumó al Plan Bienestar de 100 días de Segunda Opinión Médica. Confirmá tus datos y empezamos.'
+      : 'Nuestro equipo te invitó al Plan Bienestar de 100 días de Segunda Opinión Médica. Confirmá tus datos y empezamos.'
+    : 'Creaste tu cuenta en Segunda Opinión Médica. Te acompañamos 100 días para mejorar tu salud cardiovascular, con tus datos y un profesional de la red.';
   const pasos = esInvitado ? PASOS_INVITADO : PASOS_SELF;
 
   const setCampo = <K extends keyof Demografia>(campo: K, valor: Demografia[K]): void => {
@@ -164,7 +164,8 @@ export function Welcome(): JSX.Element {
       // Recarga completa (no SPA): el profile de MedplumClient se cachea al iniciar
       // sesión, y el Plan Bienestar evalúa la elegibilidad sobre ese profile — con
       // la recarga el sexo y la fecha recién guardados se ven de inmediato.
-      window.location.assign('/');
+      // Al terminar, el journey sigue en "Mi salud cardiovascular": cuestionarios LE8.
+      window.location.assign('/health-record/cuestionarios');
     } catch (err) {
       showErrorNotification(err);
       setSaving(false);

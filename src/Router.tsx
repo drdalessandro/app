@@ -78,8 +78,9 @@ export function Router(): JSX.Element {
         <Route path="plan-100-dias/*" element={<PlanBienestarRoutes />} />
       </Route>
       <Route path="get-care" element={<GetCare />} />
-      {/* Educación CKM: guía AHA/Ndumele (estadios 0-4) → Segunda Opinión → Plan Bienestar. */}
+      {/* Educación CKM: guía AHA/Ndumele (estadios 0-4) → Plan Bienestar 100 días. */}
       <Route path="ckm" element={<CkmEducacion />} />
+      {/* Segunda Opinión: rutas conservadas pero SIN entradas en la UI (All-in Plan Bienestar). */}
       <Route path="solicitar-som" element={<SolicitarSOM />} />
       <Route path="mi-segunda-opinion" element={<MiSegundaOpinion />} />
       <Route path="membership" element={<MembershipPage />} />
