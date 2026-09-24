@@ -3,8 +3,8 @@
 //
 // /ckm — Flujo educativo de salud CKM (Cardio-Reno-Metabólica) para el paciente:
 // qué es, qué trae la guía AHA 2023 (Ndumele), los estadios 0-4 explicados fácil,
-// "¿en qué estadío estás?" (card real del vendor), CTA a Segunda Opinión con el
-// estadío como contexto, y cómo acompaña el Plan Bienestar · 100 días.
+// "¿en qué estadío estás?" (card real del vendor) y cómo acompaña el Plan Bienestar ·
+// 100 días (All-in: las consultas viven dentro del plan).
 import {
   Alert,
   Badge,
@@ -127,9 +127,9 @@ export function CkmEducacion(): JSX.Element {
                       radius="xl"
                       mt="sm"
                       rightSection={<IconArrowRight size={14} />}
-                      onClick={() => go(`/solicitar-som?estadio=${e.estadio}`)}
+                      onClick={() => go('/care-plan/plan-100-dias')}
                     >
-                      Pedir Segunda Opinión para este estadío
+                      Empezá tu Plan Bienestar
                     </Button>
                   </div>
                 </Group>
@@ -154,9 +154,9 @@ export function CkmEducacion(): JSX.Element {
             <Button
               radius="xl"
               leftSection={<IconStethoscope size={16} />}
-              onClick={() => go('/solicitar-som')}
+              onClick={() => go('/health-record/cuestionarios')}
             >
-              Pedir mi Segunda Opinión
+              Completar mis hábitos (LE8)
             </Button>
           </Group>
         </Box>

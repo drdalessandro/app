@@ -53,9 +53,9 @@ interface QuickAction {
 const quickActions: QuickAction[] = [
   {
     icon: IconStethoscope,
-    label: 'Pedir Segunda Opinión',
-    description: 'Iniciá una segunda opinión cardiológica.',
-    href: '/solicitar-som',
+    label: 'Mi Plan Bienestar',
+    description: 'Tus pasos y metas de los 100 días.',
+    href: '/care-plan/plan-100-dias',
   },
   { icon: IconCalendarPlus, label: 'Reservar turno', description: 'Pedí tu próxima sesión o consulta.', href: '/get-care' },
   {

@@ -14,7 +14,6 @@ import { getReferenceString } from '@medplum/core';
 import type { CarePlan, Coverage, Observation, Patient, QuestionnaireResponse } from '@medplum/fhirtypes';
 import { measurementsMeta } from '../pages/health-record/Measurement.data';
 import { PANEL_SYSTEM } from './biomarkers';
-import { cargarMisSolicitudesSOM } from './som';
 
 /** CodeSystem canónico de planes de cuidado SOM (debe coincidir con recepcionistas). */
 export const CARE_PLAN_SYSTEM = 'https://segundaopinionmedica.org/fhir/CodeSystem/care-plans';
@@ -128,13 +127,12 @@ export async function cargarPlanBienestar(
 ): Promise<PlanBienestar | undefined> {
   const ref = getReferenceString(patient);
 
-  const [carePlans, coverages, observations, respuestas, consentimientos, solicitudesSOM] = await Promise.all([
+  const [carePlans, coverages, observations, respuestas, consentimientos] = await Promise.all([
     medplum.searchResources('CarePlan', `subject=${ref}&_count=20`),
     medplum.searchResources('Coverage', `beneficiary=${ref}&status=active&_count=20`),
     medplum.searchResources('Observation', `patient=${ref}&_sort=-date&_count=200`),
     medplum.searchResources('QuestionnaireResponse', `subject=${ref}&_sort=-authored&_count=100`),
     medplum.searchResources('DocumentReference', `subject=${ref}&type=${CONSENT_TYPE}&_count=1`),
-    cargarMisSolicitudesSOM(medplum, patient).catch(() => []),
   ]);
 
   const { inicio, fin } = detectarInicio(carePlans as CarePlan[], coverages as Coverage[]);
@@ -183,13 +181,6 @@ export async function cargarPlanBienestar(
       descripcion: "Life's Essential 8: sueño, dieta, actividad y tabaco.",
       href: '/health-record/cuestionarios',
       cumplido: tieneLE8,
-    },
-    {
-      id: 'som',
-      label: 'Pedí tu Segunda Opinión',
-      descripcion: 'Tu informe cardiológico personalizado.',
-      href: '/solicitar-som',
-      cumplido: solicitudesSOM.length > 0,
     },
   ];
 

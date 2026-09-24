@@ -42,8 +42,8 @@ import { PlanBienestar100 } from '../components/PlanBienestar100';
 import classes from './HomePage.module.css';
 import { EstadioCkmCard, PlanBienestarCard, RiesgoPreventCard } from '@epa/plan-bienestar-react';
 
-// Tablero mobile: la card CTA lleva a Pedir Segunda Opinión; las acciones rápidas y las
-// filas NO duplican esa entrada (el Consentimiento vive dentro de Salud).
+// Tablero mobile: All-in Plan Bienestar 100 días. La card CTA lleva al plan; las acciones
+// rápidas y las filas NO duplican esa entrada (el Consentimiento vive dentro de Salud).
 const mobileTiles: { icon: Icon; title: string; href: string }[] = [
   { icon: IconReportMedical, title: 'Cargar resultado', href: '/health-record/biomarkers' },
   { icon: IconCalendarEvent, title: 'Reservar', href: '/get-care' },
@@ -52,10 +52,10 @@ const mobileTiles: { icon: Icon; title: string; href: string }[] = [
 
 const mobileRows: { icon: Icon; title: string; description: string; href: string }[] = [
   { icon: IconDropletHeart, title: 'Entendé tu salud CKM', description: 'Corazón, riñones y metabolismo, fase por fase', href: '/ckm' },
-  { icon: IconStethoscope, title: 'Mi Segunda Opinión', description: 'Estado e informe de tu consulta', href: '/mi-segunda-opinion' },
+  { icon: IconStethoscope, title: 'Mi salud cardiovascular', description: "Tus hábitos: cuestionarios Life's Essential 8", href: '/health-record/cuestionarios' },
   { icon: IconReportMedical, title: 'Mis biomarcadores', description: 'Resultados y evolución', href: '/health-record/biomarkers' },
   { icon: IconFileText, title: 'Historia clínica', description: 'Estudios y registros', href: '/health-record' },
-  { icon: IconClipboardHeart, title: 'Mi plan', description: 'Los pasos de tu seguimiento', href: '/care-plan' },
+  { icon: IconClipboardHeart, title: 'Mi Plan Bienestar', description: 'Pasos, metas y consultas de tus 100 días', href: '/care-plan/plan-100-dias' },
   { icon: IconWallet, title: 'Mi membresía', description: 'Turnos, sesiones y pagos', href: '/membership' },
 ];
 
@@ -69,10 +69,10 @@ interface CardItem {
 // Accesos rápidos a las funciones reales del portal.
 const quickActions: CardItem[] = [
   {
-    icon: IconStethoscope,
-    title: 'Pedir Segunda Opinión',
-    description: 'Iniciá tu segunda opinión cardiológica: cargá tu caso y tus estudios.',
-    href: '/solicitar-som',
+    icon: IconClipboardHeart,
+    title: 'Plan Bienestar · 100 días',
+    description: 'Tus pasos, metas y consultas con un profesional de la red.',
+    href: '/care-plan/plan-100-dias',
   },
   {
     icon: IconDropletHeart,
@@ -99,10 +99,10 @@ const quickActions: CardItem[] = [
     href: '/Communication',
   },
   {
-    icon: IconClipboardHeart,
-    title: 'Plan de cuidado',
-    description: 'Los pasos de tu seguimiento personalizado.',
-    href: '/care-plan',
+    icon: IconStethoscope,
+    title: 'Mi salud cardiovascular',
+    description: "Completá tus hábitos con los cuestionarios Life's Essential 8.",
+    href: '/health-record/cuestionarios',
   },
   {
     icon: IconFileCheck,
@@ -117,8 +117,8 @@ const quickActions: CardItem[] = [
 const services: CardItem[] = [
   {
     icon: IconStethoscope,
-    title: 'Segunda Opinión Cardiológica',
-    description: 'Una revisión experta de tu caso por cardiólogos de prestigio internacional, según tu estadío CKM (guía AHA 2023).',
+    title: 'Consultas con especialistas',
+    description: 'Dentro de tu Plan Bienestar, consultas con cardiólogos de la red según tu estadío CKM (guía AHA 2023).',
   },
   {
     icon: IconUsers,
@@ -128,7 +128,7 @@ const services: CardItem[] = [
   {
     icon: IconUserPlus,
     title: 'Derivación de colegas',
-    description: 'Si sos profesional, derivá a tu paciente y recibí una copia del informe.',
+    description: 'Si sos profesional, sumá a tu paciente al Plan Bienestar y seguí su evolución.',
   },
   {
     icon: IconDeviceWatch,
@@ -147,22 +147,22 @@ const services: CardItem[] = [
   },
 ];
 
-// "Cómo funciona" — el recorrido de una Segunda Opinión, en 3 pasos (refleja el flujo real del portal).
+// "Cómo funciona" — el recorrido del Plan Bienestar 100 días, en 3 pasos.
 const steps = [
   {
     n: 1,
-    title: 'Contanos tu caso',
-    description: 'Cargá el motivo de consulta, tus antecedentes y subí tus estudios.',
+    title: 'Conocé tu punto de partida',
+    description: "Tus datos, tus hábitos (Life's Essential 8) y tu laboratorio: calculamos tu estadío CKM y tu riesgo PREVENT.",
   },
   {
     n: 2,
-    title: 'Análisis cardiológico',
-    description: 'Estimamos tu riesgo (score PREVENT) y revisamos tu información según las guías.',
+    title: 'Seguí tu plan',
+    description: 'Pasos y metas semanales durante 100 días, adaptados a tu estadío.',
   },
   {
     n: 3,
-    title: 'Recibí tu informe',
-    description: 'Un informe de segunda opinión claro y accionable, con recomendaciones.',
+    title: 'Acompañamiento profesional',
+    description: 'Un profesional de la red revisa tu evolución, ajusta el plan y te atiende en las consultas.',
   },
 ];
 
@@ -189,13 +189,13 @@ export function HomePage(): JSX.Element {
         {/* Tarjeta de prioridad */}
         <Card radius="lg" p="lg" mb="lg" style={{ backgroundColor: 'var(--mantine-primary-color-filled)' }}>
           <Text c="white" fw={700} fz="lg">
-            Pedí tu Segunda Opinión
+            Tu Plan Bienestar · 100 días
           </Text>
           <Text c="gray.3" fz="sm" mt={4} mb="md">
-            Cargá tu caso y tus estudios, y recibí un informe cardiológico con recomendaciones.
+            Datos, hábitos y metas para tu salud cardiovascular, con el acompañamiento de un profesional de la red.
           </Text>
-          <Button variant="white" radius="xl" size="sm" onClick={() => go('/solicitar-som')}>
-            Pedir Segunda Opinión
+          <Button variant="white" radius="xl" size="sm" onClick={() => go('/care-plan/plan-100-dias')}>
+            Ir a mi plan
           </Button>
         </Card>
         <Container mt="md">
@@ -258,15 +258,15 @@ export function HomePage(): JSX.Element {
         />
         <Container className={classes.heroContainer}>
           <Title className={classes.heroTitle}>
-            Hola <span>{profileName}</span>,<br /> tu segunda opinión cardiológica, con líderes globales en salud
+            Hola <span>{profileName}</span>,<br /> tu Plan Bienestar de 100 días para tu salud cardiovascular
           </Title>
           <Text c="white" size="lg" maw={640} mt="md" style={{ position: 'relative', zIndex: 1 }}>
-            Salud 3.0: datos y prevención. Subí tu caso y tus estudios y recibí un informe de segunda opinión
-            cardiológica, basado en las guías y en tu riesgo cardiovascular.
+            Salud 3.0: datos y prevención. Conocé tu estadío CKM, completá tus hábitos Life&apos;s Essential 8 y
+            avanzá con metas claras, acompañado por un profesional de la red.
           </Text>
           <Group mt="xl" style={{ position: 'relative', zIndex: 1 }}>
-            <Button size="lg" radius="xl" className={classes.heroButton} onClick={() => go('/solicitar-som')}>
-              Pedir Segunda Opinión
+            <Button size="lg" radius="xl" className={classes.heroButton} onClick={() => go('/care-plan/plan-100-dias')}>
+              Ir a mi Plan Bienestar
             </Button>
             <Button
               size="lg"
@@ -333,7 +333,7 @@ export function HomePage(): JSX.Element {
             Nuestros servicios
           </Title>
           <Text c="dimmed" mb="lg" maw={720}>
-            Atención cardiovascular centrada en datos y prevención: una segunda opinión experta para decidir mejor.
+            Atención cardiovascular centrada en datos y prevención: 100 días de plan con acompañamiento experto.
           </Text>
           <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg">
             {services.map((item) => (
@@ -359,7 +359,7 @@ export function HomePage(): JSX.Element {
           Cómo funciona
         </Title>
         <Text c="dimmed" mb="lg" maw={720}>
-          El recorrido de tu Segunda Opinión Médica, en tres pasos.
+          Tu Plan Bienestar de 100 días, en tres pasos.
         </Text>
         <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
           {steps.map((step) => (
